@@ -1,8 +1,8 @@
 %{
         #include <stdio.h>
-        
-        int yylex(void);
-        int yyerror(const char *s);
+
+        int yylex();
+        void yyerror(const char *s);
         int num_lines = 1, num_column = 1;
 %}
 DIGIT   [0-9]
@@ -72,14 +72,12 @@ false           printf("FALSE\n"); num_column += yyleng;
 %%
 int main(int argc, char **argv)
 {
-        ++argv, -argc; /*skip over program name */
-
-        if (argc > 0 )
-                yyin = fopen( argv[0], "r");
-        else
-                yyin = stdin;
-        yylex();
+        int t;
+        while ((t = yylex()) != 0) {
+                printf("Token: %d\n", t);
+        }
+        return 0;
 }
-int yyerror(const char *s) {
+void yyerror(const char *s) {
         printf("-%s at %s !\n", s);
 }
