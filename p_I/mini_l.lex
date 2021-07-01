@@ -1,15 +1,17 @@
 %{
+        #include <stdio.h>
+        
+        int yylex(void);
+        int yyerror(const char *s);
         int num_lines = 1, num_column = 1;
 %}
-
 DIGIT   [0-9]
 ID      [a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]
 CHAR    [a-zA-Z]
 E_ID_1  [0-9_][a-zA-Z0-9_]*
 E_ID_2  [a-zA-Z][a-zA-Z0-9_]*[_]
-
+%option noyywrap
 %%
-
 {DIGIT}+        printf("NUMBER %s\n", yytext);
 function        printf("FUNCTION\n"); num_column += yyleng;
 beginparams     printf("BEGIN_PARAMS\n"); num_column += yyleng;
@@ -67,14 +69,17 @@ false           printf("FALSE\n"); num_column += yyleng;
 {E_ID_1}        {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", num_lines, num_column, yytext); exit(-1);}
 {E_ID_1}        {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", num_lines, num_column, yytext); exit(-1);}
 .               printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", num_lines, num_column, yytext); exit(-1);}
-
+%%
 int main(int argc, char **argv)
 {
         ++argv, -argc; /*skip over program name */
 
-        if(argc >0)
+        if (argc > 0 )
                 yyin = fopen( argv[0], "r");
         else
                 yyin = stdin;
         yylex();
+}
+int yyerror(const char *s) {
+        printf("-%s at %s !\n", s);
 }

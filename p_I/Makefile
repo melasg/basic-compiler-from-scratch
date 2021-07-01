@@ -1,3 +1,7 @@
-make: flex mini_l.lex gcc -o lexer lex.yy.c -lfl
+make:
+	flex mini_l.lex
+	gcc -o lexer lex.yy.c -lfl
 
-clean: -rm lex.yy.c -rm lexer
+clean:
+	rm lex.yy.c
+	rm lexer
