@@ -10,9 +10,9 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
  
 
-# Make data base, printed on Wed Jun 30 14:29:04 2021
-
+# Make data base, printed on Wed Jun 30 20:56:38 2021
  
+
 # Variables
 
 # automatic
@@ -44,7 +44,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.visualstudio.code.oss
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/_y/r6wkz0t519jgh41pnklx7rvh0000gn/T/vscode-ipc-7e2fe887-cf08-4131-9f8d-c2516c6148df.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/_y/r6wkz0t519jgh41pnklx7rvh0000gn/T/vscode-ipc-2333a8ea-44a5-4d62-b7e8-cf12ca0f541e.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -113,6 +113,7 @@ TMPDIR = /var/folders/_y/r6wkz0t519jgh41pnklx7rvh0000gn/T/
 VSCODE_IPC_HOOK = /Users/masgh003/Library/Application Support/VSCodium/1.57.1-main.sock
 # makefile
 MAKEFLAGS = Rrqp
+ 
 # environment
 MFLAGS = -Rrqp
 # automatic
@@ -138,14 +139,13 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # default
- 
 .INCLUDE_DIRS = /usr/local/include
 # environment
 MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 28631
+VSCODE_PID = 39529
 # variable set hash-table stats:
 # Load=65/1024=6%, Rehash=0, Collisions=1/86=1%
 
@@ -226,9 +226,10 @@ GNUmakefile:
 
 # # of strings in strcache: 0
 # # of strcache buffers: 0
+ 
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Wed Jun 30 14:29:04 2021
+# Finished Make data base on Wed Jun 30 20:56:38 2021
 
  
