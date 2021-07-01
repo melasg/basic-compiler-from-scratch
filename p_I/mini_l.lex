@@ -75,5 +75,5 @@ else
         yyin = stdin;
 
 yylex();
-printf("# of lines = %d, # of chars = %d\n", num_lines,num_column);
+printf("number of lines = %d",num_lines,"number of chars = %d\n",num_column);
 }
