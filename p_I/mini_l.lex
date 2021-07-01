@@ -1,9 +1,5 @@
 %{
         #include <stdio.h>
-        #include <stdlib.h>
-        extern yylex();
-        extern yytext[];
-        extern FILE *yyin;
         int num_lines = 1, num_column = 1;
 %}
 DIGIT   [0-9]
@@ -72,11 +68,11 @@ false           printf("FALSE\n"); num_column += yyleng;
 .               printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", num_lines, num_column, yytext); exit(-1);}
 %%
 int main( int argc, char **argv )
-    {
-    ++argv, --argc;  /* skip over program name */
-    if ( argc > 0 )
+{
+++argv, --argc;  /* skip over program name */
+if ( argc > 0 )
         yyin = fopen( argv[0], "r" );
-    else
+else
         yyin = stdin;
 
 yylex();
