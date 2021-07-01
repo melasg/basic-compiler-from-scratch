@@ -904,7 +904,7 @@ printf("BEGIN_PARAMS\n"); num_column += yyleng;
 case 4:
 YY_RULE_SETUP
 #line 15 "mini_l.lex"
-printt("END_PARAMS\n"); num_column += yyleng;
+printf("END_PARAMS\n"); num_column += yyleng;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -2150,8 +2150,7 @@ void yyfree (void * ptr )
 #line 69 "mini_l.lex"
 
 
-int main( int argc, char **argv )
-{
+int main( int argc, char **argv) {
 ++argv, --argc;  /* skip over program name */
 if ( argc > 0 )
         yyin = fopen( argv[0], "r" );
@@ -2159,6 +2158,5 @@ else
         yyin = stdin;
 
 yylex();
-printf(""# of lines = %d, # of chars = %d\n",
-                         num_lines, num_column);
+printf("# of lines = %d, # of chars = %d\n", num_lines,num_column);
 }
