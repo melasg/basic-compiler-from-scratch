@@ -2158,5 +2158,6 @@ else
         yyin = stdin;
 
 yylex();
-printf("# of lines = %d, # of chars = %d\n", num_lines,num_column);
+printf("number of lines = %d\n",num_lines);
+printf("number of columns = %d\n", num_column);
 }
