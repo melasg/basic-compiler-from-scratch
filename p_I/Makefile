@@ -1,6 +1,6 @@
-$(CC) $^ $(CCFLAGS) -lfl -o $@
+# $(CC) $^ $(CCFLAGS) -lfl -o $@
 
-LDFLAGS="-L/usr/local/Cellar/flex/*/lib" CPPFLAGS="-I/usr/local/Cellar/flex/*/include" make -f "Makefile"
+# LDFLAGS="-L/usr/local/Cellar/flex/*/lib" CPPFLAGS="-I/usr/local/Cellar/flex/*/include" make -f "Makefile"
 
 make:
 	flex mini_l.lex
