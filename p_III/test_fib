@@ -49,4 +49,3 @@ call fibonacci, __temp__14
 = fib_n, __temp__14
 .> fib_n
 endfunc
-

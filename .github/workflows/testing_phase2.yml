@@ -1,0 +1,54 @@
+name: Phase 2 Build & Test (Linux)
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  push: 
+    tags:
+    - phase2
+  release:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build-and-deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      # Runs a single command using the runners shell
+      - name: Dependencies installed?
+        run: sudo apt-get update && sudo apt-get install -y bison flex gcc libfl-dev wget
+      - name: remove previous files for a fresh Build
+        run: |
+          cd $GITHUB_WORKSPACE/p_II/
+          rm parser
+          rm mini_l.lex
+          rm y.tab.c
+          rm lex.yy.c
+          rm mini_l.y
+      - name: copy over old mini_l.lex file from part 1
+        run: mv $GITHUB_WORKSPACE/p_I/mini_l.lex $GITHUB_WORKSPACE/p_II/mini_l.lex
+      - name: re-run part i fresh 
+        run: |
+          cd $GITHUB_WORKSPACE/p_II/
+          flex mini_l.lex
+          gcc -o lexer lex.yy.c -lfl
+          chmod +x lexer 
+      - name: build parser
+        run: |
+          cd $GITHUB_WORKSPACE/p_II/
+          bison -v -d --file-prefix=y mini_l.y
+          flex mini_l.lex
+          gcc -o parser y.tab.c lex.yy.c -lfl 
+          chmod +x parser
+      # Runs a set of commands using the runners shell
+      - name: now test it according to project specifications
+        run: |
+          cd $GITHUB_WORKSPACE/p_II/
+          cat fibonacci.min | ./parser > deptest_fib
+          cat mytest.min | ./parser > deptest_myt
