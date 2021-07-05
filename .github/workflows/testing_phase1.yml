@@ -12,7 +12,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-and-deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -23,29 +23,26 @@ jobs:
       # Runs a single command using the runners shell
       - name: Dependencies installed?
         run: sudo apt-get update && sudo apt-get install -y bison flex gcc libfl-dev
-      - name: build lexical analyzer "lexer"
+      - name: remove previous files for a fresh Build
         run: |
-          ls -a
           cd $GITHUB_WORKSPACE/p_I/
-          ls -a
           rm lexer
           rm lex.yy.c
+      - name: build lexical analyzer "lexer"
+        run: |
+          cd $GITHUB_WORKSPACE/p_I/
           flex mini_l.lex
           gcc -o lexer lex.yy.c -lfl
       # Runs a set of commands using the runners shell
       - name: now test it according to project specifications
         run: |
-          ls -a
           cd $GITHUB_WORKSPACE/p_I/
-          ls -a
           cat fibonacci.min | lexer >test1.txt
           cat primes.min | lexer >test2.txt
           cat mytest.min | lexer >test3.txt
       - name: Compare if Same as Expected Output (tokens)
         run: |
-          ls -a
           cd $GITHUB_WORKSPACE/p_I/
-          ls -a
           diff -s test1.txt tokens1.txt
           diff -s test2.txt tokens2.txt
           diff -s test3.txt tokens3.txt
