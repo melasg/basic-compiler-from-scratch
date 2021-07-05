@@ -1,4 +1,4 @@
-![example workflow](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/custom_config.yml/badge.svg)
+![custom_test](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/custom_config.yml/badge.svg)
 # Compiler
 
 ## Table of Contents
