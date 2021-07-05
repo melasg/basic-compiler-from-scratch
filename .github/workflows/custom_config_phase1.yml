@@ -44,10 +44,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: test from previously built (look ma no hands)
-      - run: ${{ github.action_path }}/p1/p1_test.sh >>p1_test_$${{ matrix.os_type }}.txt
+        run: ${{ github.action_path }}/p1/p1_test.sh >>p1_test_$${{ matrix.os_type }}.txt
         shell: bash
       - name: clean up post test files
-      - run: |
+        run: |
           rm lex.yy.c
           rm lexer
       - name: Upload test results
