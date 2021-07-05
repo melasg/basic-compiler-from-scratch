@@ -1,8 +1,8 @@
 # Compiler
 ## Table of Contents
 - [Phase 1](#phase-i) [![Phase 1 Build & Test (Linux)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml)
-- [Phase 2](#phase-ii)
-- [Phase 3](#phase-iii)
+- [Phase 2](#phase-ii) [![Phase 2 Build & Test (Linux)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase2.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase2.yml)
+- [Phase 3](#phase-iii) [![Phase 3 Build & Test (Linux)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase3.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase3.yml)
 
 ### phase I
 ### detailed requirements
