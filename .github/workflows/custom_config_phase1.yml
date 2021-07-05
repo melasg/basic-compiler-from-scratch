@@ -46,7 +46,7 @@ jobs:
       - name: LINUX test from previously built (look ma no hands)
         if: matrix.os_type == 'ubuntu-latest'
         run: |
-          pwd
+          cd /p_I/
           flex mini_l.lex
           gcc -o lexer lex.yy.c -lfl
           cat fibonacci.min | lexer >>{{ matrix.os_type }}_fib_test.txt
@@ -55,6 +55,7 @@ jobs:
       - name: OSX test from previously built (look ma no hands)
         if: matrix.os_type == 'macos-10.15'
         run: |
+          cd /p_I/
           flex mini_l.lex
           gcc -o lexer lex.yy.c -ll
           cat fibonacci.min | lexer >>{{ matrix.os_type }}_fib_test.txt
@@ -63,6 +64,7 @@ jobs:
       - name: WINDOWS test from previously built (look ma no hands)
         if: matrix.os_type == 'windows-latest'
         run: |
+          cd /p_I/
           flex mini_l.lex
           gcc -o lexer lex.yy.c -ll
           cat fibonacci.min | lexer >>{{ matrix.os_type }}_fib_test.txt
@@ -77,5 +79,6 @@ jobs:
         if: ${{ always() }}
       - name: clean up post test files
         run: |
+          cd /p_I/
           rm lex.yy.c
           rm lexer
