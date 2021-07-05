@@ -46,6 +46,7 @@ jobs:
       - name: LINUX test from previously built (look ma no hands)
         if: matrix.os_type == 'ubuntu-latest'
         run: |
+          pwd
           flex mini_l.lex
           gcc -o lexer lex.yy.c -lfl
           cat fibonacci.min | lexer >>{{ matrix.os_type }}_fib_test.txt
