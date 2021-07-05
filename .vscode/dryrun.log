@@ -1,6 +1,7 @@
-make all --dry-run --keep-going --print-directory
+make all --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/masgh003/Documents/GitHub/MINI-L-ft.-boz'
-make: Leaving directory `/Users/masgh003/Documents/GitHub/MINI-L-ft.-boz'
  
 make: *** No rule to make target `all'.
+ 
+make: Leaving directory `/Users/masgh003/Documents/GitHub/MINI-L-ft.-boz'
  

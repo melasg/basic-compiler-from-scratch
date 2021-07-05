@@ -5,17 +5,18 @@ on:
   release:
   push:
     tags:
-      -phase*
-      -phase1
-      -phase2
-      -phase3
+      - phase*
+      - phase1
+      - phase2
+      - phase3
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-       os: [macos-10.15, windows-latest, ubuntu-latest]
+        os_type: [macos-10.15, windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os_type }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -34,11 +35,12 @@ jobs:
           ren "C:\ProgramData\chocolatey\bin\win_bison.exe" "bison.exe"
           ren "C:\ProgramData\chocolatey\bin\win_flex.exe" "flex.exe"
   test_p1:
-    runs-on: ${{ matrix.os }}
     needs: build
     strategy:
       matrix:
-       os: [macos-10.15, windows-latest, ubuntu-latest]
+       os_type: [macos-10.15, windows-latest, ubuntu-latest]
+       
+    runs-on: ${{ matrix.os_type }}
     steps:
       - uses: actions/checkout@v2
       - name: test from previously built (look ma no hands)
