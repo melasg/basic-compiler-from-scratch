@@ -46,14 +46,14 @@ jobs:
       - name: test from previously built (look ma no hands)
         run: ${{ github.action_path }}/p1/p1_test.sh >>p1_test_$${{ matrix.os_type }}.txt
         shell: bash
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: CI_test_results_${{ matrix.os_type }}
+          path: ${{ github.action_path }}/p1/ci-test-${{ matrix.os_type }}.txt
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
       - name: clean up post test files
         run: |
           rm lex.yy.c
           rm lexer
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: CI_test_results_${{ matrix.os }}
-          path: ${{ github.action_path }}/p1/ci-test-${{ matrix.os }}.txt
-        # Use always() to always run this step to publish test results when there are test failures
-        if: ${{ always() }}
