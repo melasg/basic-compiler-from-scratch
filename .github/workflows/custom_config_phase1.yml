@@ -1,0 +1,57 @@
+name: attempting a custom CI
+
+on:
+  workflow_dispatch:
+  release:
+  push:
+    tags:
+      -phase*
+      -phase1
+      -phase2
+      -phase3
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+       os: [macos-10.15, windows-latest, ubuntu-latest]
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: install dependencies (linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y bison flex
+      - name: Build Dependencies (macOS)
+        if: matrix.os == 'macos-10.15'
+        run: |
+          brew install bison flex curl
+      - name: Build Dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install winflexbison
+          ren "C:\ProgramData\chocolatey\bin\win_bison.exe" "bison.exe"
+          ren "C:\ProgramData\chocolatey\bin\win_flex.exe" "flex.exe"
+  test_p1:
+    runs-on: ${{ matrix.os }}
+    needs: build
+    strategy:
+      matrix:
+       os: [macos-10.15, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: test from previously built (look ma no hands)
+      - run: ${{ github.action_path }}/p1/p1_test.sh
+        shell: bash
+      - name: clean up post test files
+      - run: |
+          rm lex.yy.c
+          rm lexer
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: CI_test_results_${{ matrix.os }}
+          path: ${{ github.action_path }}/p1/ci-test-${{ matrix.os }}.txt
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
