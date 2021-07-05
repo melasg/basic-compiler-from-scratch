@@ -41,9 +41,3 @@ jobs:
           cat fibonacci.min | ./lexer > test1.txt
           cat primes.min | ./lexer > test2.txt
           cat mytest.min | ./lexer > test3.txt
-      - name: Compare if Same as Expected Output (tokens)
-        run: |
-          cd $GITHUB_WORKSPACE/p_I/
-          diff -s test1.txt tokens1.txt
-          diff -s test2.txt tokens2.txt
-          diff -s test3.txt tokens3.txt
