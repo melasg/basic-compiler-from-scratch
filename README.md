@@ -1,8 +1,6 @@
-[![.github/workflows/custom_config_phase1.yml](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/custom_config_phase1.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/custom_config_phase1.yml)
 # Compiler
-
 ## Table of Contents
-- [Phase 1](#phase-i)
+- [Phase 1](#phase-i) [![Phase 1 Build & Test (Linux)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml)
 - [Phase 2](#phase-ii)
 - [Phase 3](#phase-iii)
 
