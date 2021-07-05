@@ -1,4 +1,4 @@
-name: attempting a custom CI
+name: custom CI to test phase I of the project
 
 on:
   workflow_dispatch:
