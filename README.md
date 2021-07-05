@@ -1,4 +1,4 @@
-![custom_test](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/custom_config.yml/badge.svg)
+[![Make CI](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/c-cpp.yml)
 # Compiler
 
 ## Table of Contents
