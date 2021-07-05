@@ -1,0 +1,52 @@
+name: Phase 1 Build & Test (Linux)
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  push: 
+    tags:
+    - phase*
+  release:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      # Runs a single command using the runners shell
+      - name: Dependencies installed?
+        run: sudo apt-get update && sudo apt-get install -y bison flex gcc diff
+      - name: build lexical analyzer "lexer"
+        run: |
+          ls -a
+          cd $GITHUB_WORKSPACE/p_I/
+          ls -a
+          rm lexer
+          rm lex.yy.c
+          flex mini_l.lex
+          gcc -o lexer lex.yy.c -lfl
+      # Runs a set of commands using the runners shell
+      - name: now test it according to project specifications
+        run: |
+          ls -a
+          cd $GITHUB_WORKSPACE/p_I/
+          ls -a
+          cat fibonacci.min | lexer >test1.txt
+          cat primes.min | lexer >test2.txt
+          cat mytest.min | lexer >test3.txt
+      - name: Compare if Same as Expected Output (tokens)
+        run: |
+          ls -a
+          cd $GITHUB_WORKSPACE/p_I/
+          ls -a
+          diff -s test1.txt tokens1.txt
+          diff -s test2.txt tokens2.txt
+          diff -s test3.txt tokens3.txt
+          
