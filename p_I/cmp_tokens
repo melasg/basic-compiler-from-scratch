@@ -1,0 +1,9 @@
+#! /bin/bash
+# one by one print tokens directly outputted from the input program into a file
+cat fibonacci.min | ./lexer > test1
+cat primes.min | ./lexer > test2
+cat mytest.min | ./lexer > test3
+# diff compare to what's expected
+diff -s test1.txt tokens1
+diff -s test2.txt tokens2
+diff -s test3.txt tokens3
