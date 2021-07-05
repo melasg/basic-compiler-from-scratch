@@ -33,13 +33,14 @@ jobs:
           cd $GITHUB_WORKSPACE/p_I/
           flex mini_l.lex
           gcc -o lexer lex.yy.c -lfl
+          chmod +x lexer 
       # Runs a set of commands using the runners shell
       - name: now test it according to project specifications
         run: |
           cd $GITHUB_WORKSPACE/p_I/
-          cat fibonacci.min | lexer > test1.txt
-          cat primes.min | lexer > test2.txt
-          cat mytest.min | lexer > test3.txt
+          cat fibonacci.min | ./lexer > test1.txt
+          cat primes.min | ./lexer > test2.txt
+          cat mytest.min | ./lexer > test3.txt
       - name: Compare if Same as Expected Output (tokens)
         run: |
           cd $GITHUB_WORKSPACE/p_I/
