@@ -52,7 +52,6 @@ jobs:
           rm lexer
       - name: Upload test results
         uses: actions/upload-artifact@v2
-        run: echo "what does this print out"
         with:
           name: CI_test_results_${{ matrix.os }}
           path: ${{ github.action_path }}/p1/ci-test-${{ matrix.os }}.txt
