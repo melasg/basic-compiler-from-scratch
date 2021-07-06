@@ -1,4 +1,4 @@
-[forthebadge](https://img.shields.io/badge/Made%20with-MINI--L-orange?style=for-the-badge&logo=appveyor)
+[![forthebadge]](https://img.shields.io/badge/Made%20with-MINI--L-orange?style=for-the-badge&logo=appveyor)
 # Compiler
 ## Table of Contents
 - [Phase 1](#phase-i) [![Phase 1 Build & Test (Linux)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml)
