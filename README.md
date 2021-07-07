@@ -1,3 +1,4 @@
+[![badge](https://img.shields.io/badge/Made%20with-MINI--L-red?style=for-the-badge)](https://img.shields.io/badge/Made%20with-MINI--L-red?style=for-the-badge)
 # Compiler
 ## Table of Contents
 - [Phase 1](#phase-i) [![Phase 1 Build & Test (Linux)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml/badge.svg)](https://github.com/melasq/MINI-L-ft.-boz/actions/workflows/testing_phase1.yml)
