@@ -2,9 +2,10 @@
 // C declarations
 #define YYPRINT(file, type, value)   yyprint (file, type, value)
 #include <cstdlib>
+#include <stdlib.h>
 #include <iostream>
 using namespace std;
-
+char ∗progname;
 extern FILE* yyin;
 int yylex(); 
 %} // header file part ends here 
@@ -27,13 +28,16 @@ int yylex();
 %type  <val>  exp
 
 %right '='
+%left '<' '>' '=' NE LE GE 
 %left '-' '+'
 %left '*' '/'
 %left NEG     /* Negation--unary minus */
 %right '^'    /* Exponentiation        */
 
 // grammar follows
-
+// program ::= “function” program;
+// function ::= FUNCTION ident { SEMICOLON BEGIN_PARAMS dec_list END_PARAMS BEGIN_LOCALS
+// dec_list END_LOCALS BEGIN_BODY sta_loop END_BODY }
 input:   /* empty */
         | input line
 ;
@@ -102,3 +106,28 @@ yyprint (file, type, value)
   else if (type == NUM)
     fprintf (file, " %d", value.val);
 }
+
+
+// main( argc, argv )
+// char ∗argv[];
+// {
+//   progname = argv[0];
+//   yyparse();
+// }
+
+// yyerror( s )
+// char ∗s;
+// {
+//   fprintf( stderr ,"%s: %s\n" , progname , s );
+// }
+
+// errmsg1
+  // "Expected operand"
+  // 
+// errmsg2
+  // "Unbalanced parentheses (right)"
+  // ignore the last ')'
+// errmsg3
+  // Found the start of subexpression when expecting continuation or end of current subexpression
+// errmsg4
+  // Found end of expression when expecting continuation operator or end of subexpression (right parenthesis)

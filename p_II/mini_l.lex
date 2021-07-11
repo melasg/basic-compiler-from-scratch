@@ -34,7 +34,7 @@ continue        printf("CONTINUE\n"); num_column += yyleng;
 and|or     {yylval.op = (yytext[0] == 'a' ? AND : OR); return BOP;}
 not        {yylval.op = NOT; return NOTTOK;}
 true|false {yylval.exp = new BoolExp(yytext[0] == 't'); return BOOL;}
-{ID}            printf("IDENT %s\n", yytext); num_column += yyleng;
+{ID}            printf("IDENT %s\n", yytext); num_column += yyleng; //{yyval=install_id(); return ID;}
 {CHAR}          printf("IDENT %s\n", yytext); num_column += yyleng;
 [><=]|([><!]=) {yylval.op = getCompOp(yytext); return COMP;}
 ":="       {return ASN;}
