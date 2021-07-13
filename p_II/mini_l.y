@@ -21,7 +21,7 @@ void yyerror(const char * errmsg) {
   int no_val;
 }
 %token <id_val> IDENT // declared token values
-%token <no_val> numberz
+%token <no_val> NUMBER
   // list all tokens in specified order of precedence from phase 2 specification:
 %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE RETURN SEMICOLON COLON COMMA
     // 9
