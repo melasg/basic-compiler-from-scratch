@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stlib.h>
 #include <unistd.h>
-#include <string> // in case? string
+#include <string>
 #include "y.tab.h"
 
 #define YY_NO_UNPUT
@@ -16,13 +16,10 @@ void yyerror(const char * errmsg);
 
 %option noyywrap
 %option nounput
-// definitions
 DIGIT [0-9]
 LETTER [a-zA-Z]
 UNDERSCORE _
 COMMENT ##.*\n
-        // RULES
-                // misc
 ASSIGN                          ":="
 COMMENT                         "##"
 L_PAREN                         "("
@@ -32,7 +29,6 @@ R_SQUARE_BRACKET                "]"
 COLON                           ":"
 COMMA                           ","
 SEMICOLON                       ";"
-                // feu. calls
 FUNCTION                        "function"
 BEGIN_PARAMS                    "beginparams"
 END_PARAMS                      "endparams"
@@ -40,7 +36,6 @@ BEGIN_LOCALS                    "beginlocals"
 END_LOCALS                      "endlocals"
 BEGIN_BODY                      "beginbody"
 END_BODY                        "endbody"
-                // array subscripting
 INTEGER                         "integer"
 ARRAY                           "array"
 OF                              "of"
@@ -56,7 +51,6 @@ CONTINUE                        "continue"
 READ                            "read"
 WRITE                           "write"
 RETURN                          "return"
-                // comp. operators
 AND                             "and"
 OR                              "or"
 NOT                             "not"
@@ -68,16 +62,14 @@ LTE                             "<="
 GTE                             ">="
 EQ                              "=="
 NEQ                             "<>"
-                // ARITHMETIC
 SUB                             "-"
 ADD                             "+"
 MULT                            "*"
 DIV                             "/"
 MOD                             "%"
 %{
-	int posx = 1, posy = 1; //sort error by position of error by row then column
+	int posx = 1, posy = 1;
 %}
-// definitions follow 
 %%
 {COMMENT}.*
 ({DIGIT}|{UNDERSCORE}({LETTER}|{DIGIT}|{UNDERSCORE}))*
@@ -243,22 +235,3 @@ MOD                             "%"
         posx = posx + yyleng;
         exit(1);
 %%
-// int main( int argc, char **argv) {
-// ++argv, --argc;  /* skip over program name */
-// if ( argc > 0 )
-//         yyin = fopen( argv[0], "r" );
-// else
-//         yyin = stdin;
-
-// yylex();
-// printf("number of lines = %d\n",posy);
-// printf("number of columns = %d\n", posx);
-// }
-
-// Called if there is a scanner error
-// void scanerror() {
-//   if (! error) {
-//     errout << "Unrecognized token starting with " << yytext << endl;
-//     error = true;
-//   }
-// }
