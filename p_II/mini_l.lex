@@ -1,237 +1,80 @@
 %{
-#include <iostream>
-#include <stdio.h>
-#include <stlib.h>
-#include <unistd.h>
-#include <string>
-#include "y.tab.h"
-
-#define YY_NO_UNPUT
-
-using namespace std;
-
-void yyerror(const char * errmsg);
-
+        #include <stdio.h>
+        int num_lines = 1, num_column = 1;
 %}
-
+DIGIT   [0-9]
+ID      [a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]
+CHAR    [a-zA-Z]
+E_ID_1  [0-9_][a-zA-Z0-9_]*
+E_ID_2  [a-zA-Z][a-zA-Z0-9_]*[_]
 %option noyywrap
-%option nounput
-DIGIT [0-9]
-LETTER [a-zA-Z]
-UNDERSCORE _
-COMMENT ##.*\n
-ASSIGN                          ":="
-COMMENT                         "##"
-L_PAREN                         "("
-R_PAREN                         ")"
-L_SQUARE_BRACKET                "["
-R_SQUARE_BRACKET                "]"
-COLON                           ":"
-COMMA                           ","
-SEMICOLON                       ";"
-FUNCTION                        "function"
-BEGIN_PARAMS                    "beginparams"
-END_PARAMS                      "endparams"
-BEGIN_LOCALS                    "beginlocals"
-END_LOCALS                      "endlocals"
-BEGIN_BODY                      "beginbody"
-END_BODY                        "endbody"
-INTEGER                         "integer"
-ARRAY                           "array"
-OF                              "of"
-IF                              "if"
-THEN                            "then"
-ENDIF                           "endif"
-ELSE                            "else"
-WHILE                           "while"
-DO                              "do"
-BEGINLOOP                       "beginloop"
-ENDLOOP                         "endloop"
-CONTINUE                        "continue"
-READ                            "read"
-WRITE                           "write"
-RETURN                          "return"
-AND                             "and"
-OR                              "or"
-NOT                             "not"
-TRUE                            "true"
-FALSE                           "false"
-LT                              "<"
-GT                              ">"
-LTE                             "<="
-GTE                             ">="
-EQ                              "=="
-NEQ                             "<>"
-SUB                             "-"
-ADD                             "+"
-MULT                            "*"
-DIV                             "/"
-MOD                             "%"
-%{
-	int posx = 1, posy = 1;
-%}
 %%
-{COMMENT}.*
-({DIGIT}|{UNDERSCORE}({LETTER}|{DIGIT}|{UNDERSCORE}))*
-({LETTER}|{DIGIT}|{UNDERSCORE})+{UNDERSCORE}
-{LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
-{NUMBER}+
-        posx = posx + yyleng;
-        yylval.no_val = atoi(yytext);
-        return NUMBER;
-{ASSIGN}
-        posx = posx + yyleng;
-        return ASSIGN;
-{L_PAREN}
-        posx = posx + yyleng;
-        return L_PAREN;
-{R_PAREN}
-        posx = posx + yyleng;
-        return R_PAREN;
-{L_SQUARE_BRACKET}
-        posx = posx + yyleng;
-        return R_SQUARE_BRACKET;
-{R_SQUARE_BRACKET}
-        posx = posx + yyleng;
-        return L_SQUARE_BRACKET;
-{COLON}
-        posx = posx + yyleng;
-        return COLON;
-{COMMA}
-        posx = posx + yyleng;
-        return COMMA;
-{SEMICOLON}
-        posx = posx + yyleng;
-        return SEMICOLON;
-{BEGIN_PARAMS}
-        posx = posx + yyleng;
-        return BEGIN_PARAMS;
-{END_PARAMS}
-        posx = posx + yyleng;
-        return END_PARAMS;
-{BEGIN_LOCALS}
-        posx = posx + yyleng;
-        return BEGIN_LOCALS;
-{END_LOCALS}
-        posx = posx + yyleng;
-        return END_LOCALS;
-{END_BODY}
-        posx = posx + yyleng;
-        return END_BODY;
-{BEGINLOOP}
-        posx = posx + yyleng;
-        return BEGINLOOP;
-{INTEGER}
-        posx = posx + yyleng;
-        return INTEGER;
-{ARRAY}
-        posx = posx + yyleng;
-        return ARRAY;
-{OF}
-        posx = posx + yyleng;
-        return OF;
-{IF}
-        posx = posx + yyleng;
-        return IF;
-{THEN}
-        posx = posx + yyleng;
-        return THEN;
-{ENDIF}
-        posx = posx + yyleng;
-        return ENDIF;
-{ELSE}
-        posx = posx + yyleng;
-        return ELSE;
-{WHILE}
-        posx = posx + yyleng;
-        return WHILE;
-{DO}
-        posx = posx + yyleng;
-        return DO;
-{CONTINUE}
-        posx = posx + yyleng;
-        return CONTINUE;
-{READ}
-        posx = posx + yyleng;
-        return READ;
-{WRITE}
-        posx = posx + yyleng;
-        return WRITE;
-{AND}
-        posx = posx + yyleng;
-        return AND;
-{OR}
-        posx = posx + yyleng;
-        return OR;
-{NOT}
-        posx = posx + yyleng;
-        return NOT;
-{TRUE}
-        posx = posx + yyleng;
-        return TRUE;
-{FALSE}
-        posx = posx + yyleng;
-        return FALSE;
-{RETURN}
-        posx = posx + yyleng;
-        return RETURN;
-{SUB}
-        posx = posx + yyleng;
-        return SUB;
-{ADD}
-        posx = posx + yyleng;
-        return ADD;
-{MULT}
-        posx = posx + yyleng;
-        return MULT;
-{DIV}
-        posx = posx + yyleng;
-        return DIV;
-{MOD}
-        posx = posx + yyleng;
-        return MOD;
-{EQ}
-        posx = posx + yyleng;
-        return NEQ;
-{LT}
-        posx = posx + yyleng;
-        return LT;
-{GT}
-        posx = posx + yyleng;
-        return GT;
-{LTE}
-        posx = posx + yyleng;
-        return LTE;
-{GTE}
-        posx = posx + yyleng;
-        return GTE;
-[0-9_][a-zA-Z_0-9]+
-        printf("Error at row: %x column : %y identifier ", posy, posx);
-        ECHO;
-        printf(" must begin with a letter\n");
-        posx = posx + yyleng;
-        exit(1);
-[a-zA-Z][a-zA-Z0-9_]*[_]
-        printf("Error at row:%x, column: %y identifier ", posy, posx);
-        ECHO;
-        printf("cannot end with underscore\n");
-        posx = posx + yyleng;
-        exit(1);
-[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]*
-        pox = posx + yyleng;
-        yylval.str = new string(yytext);
-        return IDENT;
-\n
-        ++posy;
-        posx = 0;	
-" "|[\t]
-        posx = posx + yyleng;
-[ ]
-        posx = posx + yyleng;		 
-.
-        printf("Error at row: %x column:%d ; unrecognized symbol ", posy, posx);
-        ECHO;
-        printf("\n");
-        posx = posx + yyleng;
-        exit(1);
+{DIGIT}+        printf("NUMBER %s\n", yytext);
+function        printf("FUNCTION\n"); num_column += yyleng;
+beginparams     printf("BEGIN_PARAMS\n"); num_column += yyleng;
+endparams       printf("END_PARAMS\n"); num_column += yyleng;
+beginlocals     printf("BEGIN_LOCALS\n"); num_column += yyleng;
+endlocals       printf("END_LOCALS\n"); num_column += yyleng;
+beginbody       printf("BEGIN_BODY\n"); num_column += yyleng;
+endbody         printf("END_BODY\n"); num_column += yyleng;
+integer         printf("INTEGER\n"); num_column += yyleng;
+array           printf("ARRAY\n"); num_column += yyleng;
+of              printf("OF\n"); num_column += yyleng;
+if              printf("IF\n"); num_column += yyleng;
+then            printf("THEN\n"); num_column += yyleng;
+endif           printf("ENDIF\n"); num_column += yyleng;
+else            printf("ELSE\n"); num_column += yyleng;
+while           printf("WHILE\n"); num_column += yyleng;
+do              printf("DO\n"); num_column += yyleng;
+for             printf("FOR\n"); num_column += yyleng;
+beginloop       printf("BEGINLOOP\n"); num_column += yyleng;
+endloop         printf("ENDLOOP\n"); num_column += yyleng;
+continue        printf("CONTINUE\n"); num_column += yyleng;
+read            printf("READ\n"); num_column += yyleng;
+write           printf("WRITE\n"); num_column += yyleng;
+and             printf("AND\n"); num_column += yyleng;
+or              printf("OR\n"); num_column += yyleng;
+not             printf("NOT\n"); num_column += yyleng;
+true            printf("TRUE\n"); num_column += yyleng;
+false           printf("FALSE\n"); num_column += yyleng;
+{ID}            printf("IDENT %s\n", yytext); num_column += yyleng;
+{CHAR}          printf("IDENT %s\n", yytext); num_column += yyleng;
+"=="            printf("EQ\n"); num_column += yyleng;
+"<>"            printf("NEQ\n"); num_column += yyleng;
+"<="            printf("LTS\n"); num_column += yyleng;
+">="            printf("GTE\n"); num_column += yyleng;
+":="            printf("ASSIGN\n"); num_column += yyleng;
+"-"             printf("SUB\n"); num_column += yyleng;
+"+"             printf("ADD\n"); num_column += yyleng;
+"*"             printf("MULT\n"); num_column += yyleng;
+"/"             printf("DIV\n"); num_column += yyleng;
+"%"             printf("MOD\n"); num_column += yyleng;
+"<"             printf("LT\n"); num_column += yyleng;
+">"             printf("GT\n"); num_column += yyleng;
+";"             printf("SEMICOLON\n"); num_column += yyleng;
+":"             printf("COLON\n"); num_column += yyleng;
+","             printf("COMMA\n"); num_column += yyleng;
+"("             printf("L_PAREN\n"); num_column += yyleng;
+")"             printf("R_PAREN\n"); num_column += yyleng;
+"["             printf("L_SQUARE_BRACKET\n"); num_column += yyleng;
+"]"             printf("R_SQUARE_BRACKET\n"); num_column += yyleng;
+"##"[^\n]*"\n"  num_lines++; num_column = 1;
+[ ]             num_column++;
+\t              num_column += 4;
+\n              num_column = 1; num_lines++;
+<<EOF>>         exit(0);
+{E_ID_1}        {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter\n", num_lines, num_column, yytext); exit(-1);}
+{E_ID_1}        {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", num_lines, num_column, yytext); exit(-1);}
+.|\n         ECHO; REJECT;
 %%
+int main( int argc, char **argv) {
+++argv, --argc;  /* skip over program name */
+if ( argc > 0 )
+        yyin = fopen( argv[0], "r" );
+else
+        yyin = stdin;
+
+yylex();
+printf("number of lines = %d\n",num_lines);
+printf("number of columns = %d\n", num_column);
+}
