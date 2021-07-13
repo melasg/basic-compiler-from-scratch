@@ -2,7 +2,7 @@
 // C Declarations
 #include <stdlib.h>
 #include <stdio.h>
-int yylex(void); /* Function prototype */
+int yylex(void); /* Functionz prototype */
 
 extern int posy, posx;
 
@@ -16,14 +16,14 @@ void yyerror(const char * errmsg) {
 	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
   }
 %} // header file part ends here 
-%union{ //struct for id/Number values
+%union{ //struct for id/Numberz values
   char* id_val;
   int no_val;
 }
 %token <id_val> IDENT // declared token values
-%token <no_val> Number
+%token <no_val> Numberz
   // list all tokens in specified order of precedence from phase 2 specification:
-%token Function BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE RETURN SEMICOLON COLON COMMA
+%token Functionz BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE RETURN SEMICOLON COLON COMMA
     // 9
 %left ASSIGN
 %left OR
@@ -44,18 +44,18 @@ void yyerror(const char * errmsg) {
 */
 %%
 Program: %empty	{ printf("Program -> EPSILON\n"); }
-		| Function Program { printf("Program -> Function Program\n"); }
+		| Functionz Program { printf("Program -> Functionz Program\n"); }
 ;
-Function: FUNCTION Identifier SEMICOLON	BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY {printf("Function -> FUNCTION Identifier SEMICOLON BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY\n");}
+Functionz: FUNCTION Identifier SEMICOLON	BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY {printf("Functionz -> FUNCTION Identifier SEMICOLON BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY\n");}
 ;
 Identifier: IDENT {printf("Identifier -> IDENT %s\n", $1);}
 ;
 Identifiers: Identifier	{printf("Identifiers -> Identifier\n");}
 		| Identifier COMMA Identifiers	{printf("Identifiers -> Identifier COMMA Identifiers\n");}
 ;
-Number: NUMBER {printf("Number -> NUMBER %d\n", $1);}
+Numberz: Numberz {printf("Numberz -> Numberz %d\n", $1);}
 ;
-Declaration: Identifiers COLON ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF INTEGER {printf("Declaration -> Identifiers COLON ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF INTEGER\n");}
+Declaration: Identifiers COLON ARRAY L_SQUARE_BRACKET Numberz R_SQUARE_BRACKET OF INTEGER {printf("Declaration -> Identifiers COLON ARRAY L_SQUARE_BRACKET Numberz R_SQUARE_BRACKET OF INTEGER\n");}
 		| Identifiers COLON INTEGER {printf("Declaration -> Identifiers COLON INTEGER\n");}
 ;
 Declarations: %empty {printf("Declarations -> EPSILON\n");}
@@ -69,7 +69,7 @@ Statement: var ASSIGN Expression {printf("Statement -> var ASSIGN Expression\n")
 		| IF Bool-Expr THEN Statements ELSE Statements ENDIF {printf("Statement -> IF Bool-Expr THEN Statements ELSE Statements ENDIF\n");}
 		| WHILE Bool-Expr BEGINLOOP Statements ENDLOOP {printf("Statement -> WHILE Bool-Expr BEGINLOOP Statements ENDLOOP\n");}
 		| DO BEGINLOOP Statements ENDLOOP WHILE Bool-Expr {printf("Statement -> DO BEGINLOOP Statements ENDLOOP WHILE Bool-Expr\n");}
-		| FOR var ASSIGN Number SEMICOLON Bool-Expr SEMICOLON var ASSIGN Expression BEGINLOOP Statements ENDLOOP {printf("FOR var ASSIGN Number SEMICOLON Bool-Expr SEMICOLON var ASSIGN Expression BEGINLOOP Statements ENDLOOP\n");}
+		| FOR var ASSIGN Numberz SEMICOLON Bool-Expr SEMICOLON var ASSIGN Expression BEGINLOOP Statements ENDLOOP {printf("FOR var ASSIGN Numberz SEMICOLON Bool-Expr SEMICOLON var ASSIGN Expression BEGINLOOP Statements ENDLOOP\n");}
 		| READ varz {printf("Statement -> READ varz\n");}
 		| WRITE varz {printf("Statement -> WRITE varz\n");}
 		| CONTINUE {printf("Statement -> CONTINUE\n");}
@@ -110,10 +110,10 @@ Multiplicative-Expr: Term {printf("Multiplicative-Expr -> Term\n");}
 		| Term MOD Multiplicative-Expr {printf("Multiplicative-Expr -> Term MOD Multiplicative-Expr\n");}
 ;
 Term: var {printf("Term -> var\n");}
-		| Number {printf("Term -> Number\n");}
+		| Numberz {printf("Term -> Numberz\n");}
 		| L_PAREN Expression R_PAREN {printf("Term -> L_PAREN Expression R_PAREN\n");}
 		| SUB var %prec UMINUS {printf("Term -> SUB var\n");}
-		| SUB Number %prec UMINUS {printf("Term -> SUB Number\n");}
+		| SUB Numberz %prec UMINUS {printf("Term -> SUB Numberz\n");}
 		| SUB L_PAREN Expression R_PAREN %prec UMINUS {printf("Term -> SUB L_PAREN Expression R_PAREN\n");}
 		| Identifier L_PAREN Expressions R_PAREN {printf("Term -> Identifier L_PAREN Expressions R_PAREN\n");}
 		| Identifier L_PAREN R_PAREN {printf("Term -> Identifier L_PAREN R_PAREN\n");}
