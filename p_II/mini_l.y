@@ -141,5 +141,5 @@ void yyerror(const char *msg) {
 	extern int num_column, num_lines;
 	extern char* yytext;
   //printf("ERROR: at %s symbol %s ", msg, yytext);
-  printf("Error: On line %d, character %d: %s \n", posy, posx, msg);
+  printf("Error: On line %d, character %d: %s \n", num_lines, num_column, msg);
 }
