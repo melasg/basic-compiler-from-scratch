@@ -66,7 +66,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
       
 <meta name="generator" content="Railroad Diagram Generator 1.63">
 
-<p style="font-size: 14px; font-weight:bold"><a name="Program">Program:</a></p><img border="0" src="docs/img/program.png" height="57" width="173" usemap="#Program.map"><map name="Program.map"><area shape="rect" coords="49,1,123,33" href="#Function" title="Function"></map><p>
+<p style="font-size: 14px; font-weight:bold"><a name="Program">Program:</a></p><img border="0" src="~/docs/img/program.png" height="57" width="173" usemap="#Program.map"><map name="Program.map"><area shape="rect" coords="49,1,123,33" href="#Function" title="Function"></map><p>
 
 <div class="ebnf"><code>
                
@@ -74,7 +74,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 <div><a href="#Program" title="Program">Program</a>&nbsp;&nbsp;::= <a href="#Function" title="Function">Function</a>*</div></code></div>
          </p>
       
-<p>no references</p><br><p style="font-size: 14px; font-weight:bold"><a name="Function">Function:</a></p><img border="0" src="docs/img/function.png" height="167" width="867" usemap="#Function.map"><map name="Function.map"><area shape="rect" coords="437,17,529,49" href="#Declaration" title="Declaration"><area shape="rect" coords="161,115,253,147" href="#Declaration" title="Declaration"><area shape="rect" coords="589,115,675,147" href="#Statement" title="Statement"></map><p>
+<p>no references</p><br><p style="font-size: 14px; font-weight:bold"><a name="Function">Function:</a></p><img border="0" src="~/docs/img/function.png" height="167" width="867" usemap="#Function.map"><map name="Function.map"><area shape="rect" coords="437,17,529,49" href="#Declaration" title="Declaration"><area shape="rect" coords="161,115,253,147" href="#Declaration" title="Declaration"><area shape="rect" coords="589,115,675,147" href="#Statement" title="Statement"></map><p>
     
 <div class="ebnf"><code>
     
@@ -87,7 +87,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#Program" title="Program">Program</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="Declaration">Declaration:</a></p><img border="0" src="docs/img/declaration.png" height="53" width="669"><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="Declaration">Declaration:</a></p><img border="0" src="~/docs/img/declaration.png" height="53" width="669"><p>
 
 <div class="ebnf"><code>
     
@@ -102,7 +102,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#Function" title="Function">Function</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="Statement">Statement:</a></p><img border="0" src="docs/img/statement.png" height="449" width="917" usemap="#Statement.map"><map name="Statement.map"><area shape="rect" coords="69,1,109,33" href="#var" title="var"><area shape="rect" coords="203,1,293,33" href="#Expression" title="Expression"><area shape="rect" coords="97,111,237,143" href="#BooleanExpression" title="BooleanExpression"><area shape="rect" coords="367,111,453,143" href="#Statement" title="Statement"><area shape="rect" coords="643,111,729,143" href="#Statement" title="Statement"><area shape="rect" coords="125,193,265,225" href="#BooleanExpression" title="BooleanExpression"><area shape="rect" coords="411,193,497,225" href="#Statement" title="Statement"><area shape="rect" coords="231,259,317,291" href="#Statement" title="Statement"><area shape="rect" coords="571,259,711,291" href="#BooleanExpression" title="BooleanExpression"><area shape="rect" coords="185,325,225,357" href="#var" title="var"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="Statement">Statement:</a></p><img border="0" src="~/docs/img/statement.png" height="449" width="917" usemap="#Statement.map"><map name="Statement.map"><area shape="rect" coords="69,1,109,33" href="#var" title="var"><area shape="rect" coords="203,1,293,33" href="#Expression" title="Expression"><area shape="rect" coords="97,111,237,143" href="#BooleanExpression" title="BooleanExpression"><area shape="rect" coords="367,111,453,143" href="#Statement" title="Statement"><area shape="rect" coords="643,111,729,143" href="#Statement" title="Statement"><area shape="rect" coords="125,193,265,225" href="#BooleanExpression" title="BooleanExpression"><area shape="rect" coords="411,193,497,225" href="#Statement" title="Statement"><area shape="rect" coords="231,259,317,291" href="#Statement" title="Statement"><area shape="rect" coords="571,259,711,291" href="#BooleanExpression" title="BooleanExpression"><area shape="rect" coords="185,325,225,357" href="#var" title="var"></map><p>
 
 <div class="ebnf"><code>
 
@@ -128,7 +128,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#Statement" title="Statement">Statement</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="BooleanExpression">BooleanExpression:</a></p><img border="0" src="docs/img/bool-expr.png" height="103" width="391" usemap="#BooleanExpression.map"><map name="BooleanExpression.map"><area shape="rect" coords="49,1,241,33" href="#RelationshipAndExpression" title="RelationshipAndExpression"><area shape="rect" coords="129,67,321,99" href="#RelationshipAndExpression" title="RelationshipAndExpression"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="BooleanExpression">BooleanExpression:</a></p><img border="0" src="~/docs/img/bool-expr.png" height="103" width="391" usemap="#BooleanExpression.map"><map name="BooleanExpression.map"><area shape="rect" coords="49,1,241,33" href="#RelationshipAndExpression" title="RelationshipAndExpression"><area shape="rect" coords="129,67,321,99" href="#RelationshipAndExpression" title="RelationshipAndExpression"></map><p>
 
 <div class="ebnf"><code>
 
@@ -147,7 +147,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#Statement" title="Statement">Statement</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="RelationshipAndExpression">RelationshipAndExpression:</a></p><img border="0" src="docs/img/relation-and-expr.png" height="103" width="375" usemap="#RelationshipAndExpression.map"><map name="RelationshipAndExpression.map"><area shape="rect" coords="49,1,217,33" href="#RelationshipExpression" title="RelationshipExpression"><area shape="rect" coords="137,67,305,99" href="#RelationshipExpression" title="RelationshipExpression"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="RelationshipAndExpression">RelationshipAndExpression:</a></p><img border="0" src="~/docs/img/relation-and-expr.png" height="103" width="375" usemap="#RelationshipAndExpression.map"><map name="RelationshipAndExpression.map"><area shape="rect" coords="49,1,217,33" href="#RelationshipExpression" title="RelationshipExpression"><area shape="rect" coords="137,67,305,99" href="#RelationshipExpression" title="RelationshipExpression"></map><p>
 
 <div class="ebnf"><code>
 
@@ -164,7 +164,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#BooleanExpression" title="BooleanExpression">BooleanExpression</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="RelationshipExpression">RelationshipExpression:</a></p><img border="0" src="docs/img/relation-expr.png" height="203" width="483" usemap="#RelationshipExpression.map"><map name="RelationshipExpression.map"><area shape="rect" coords="157,35,247,67" href="#Expression" title="Expression"><area shape="rect" coords="267,35,323,67" href="#Comp" title="Comp"><area shape="rect" coords="343,35,433,67" href="#Expression" title="Expression"><area shape="rect" coords="203,167,343,199" href="#BooleanExpression" title="BooleanExpression"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="RelationshipExpression">RelationshipExpression:</a></p><img border="0" src="~/docs/img/relation-expr.png" height="203" width="483" usemap="#RelationshipExpression.map"><map name="RelationshipExpression.map"><area shape="rect" coords="157,35,247,67" href="#Expression" title="Expression"><area shape="rect" coords="267,35,323,67" href="#Comp" title="Comp"><area shape="rect" coords="343,35,433,67" href="#Expression" title="Expression"><area shape="rect" coords="203,167,343,199" href="#BooleanExpression" title="BooleanExpression"></map><p>
 
 <div class="ebnf"><code>
 
@@ -179,7 +179,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#RelationshipAndExpression" title="RelationshipAndExpression">RelationshipAndExpression</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="Comp">Comp:</a></p><img border="0" src="docs/img/comp.png" height="257" width="135"><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="Comp">Comp:</a></p><img border="0" src="~/docs/img/comp.png" height="257" width="135"><p>
 
 <div class="ebnf"><code>
 
@@ -202,7 +202,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#RelationshipExpression" title="RelationshipExpression">RelationshipExpression</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="Expression">Expression:</a></p><img border="0" src="docs/img/expression.png" height="113" width="319" usemap="#Expression.map"><map name="Expression.map"><area shape="rect" coords="119,1,289,33" href="#MultiplicativeExpression" title="MultiplicativeExpression"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="Expression">Expression:</a></p><img border="0" src="~/docs/img/expression.png" height="113" width="319" usemap="#Expression.map"><map name="Expression.map"><area shape="rect" coords="119,1,289,33" href="#MultiplicativeExpression" title="MultiplicativeExpression"></map><p>
 
 <div class="ebnf"><code>
 
@@ -223,7 +223,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#var" title="var">var</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="MultiplicativeExpression">MultiplicativeExpression:</a></p><img border="0" src="docs/img/multiplicative-expr.png" height="157" width="205" usemap="#MultiplicativeExpression.map"><map name="MultiplicativeExpression.map"><area shape="rect" coords="123,1,175,33" href="#Term" title="Term"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="MultiplicativeExpression">MultiplicativeExpression:</a></p><img border="0" src="~/docs/img/multiplicative-expr.png" height="157" width="205" usemap="#MultiplicativeExpression.map"><map name="MultiplicativeExpression.map"><area shape="rect" coords="123,1,175,33" href="#Term" title="Term"></map><p>
 
 <div class="ebnf"><code>
 
@@ -238,7 +238,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#Expression" title="Expression">Expression</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="Term">Term:</a></p><img border="0" src="docs/img/term.png" height="273" width="507" usemap="#Term.map"><map name="Term.map"><area shape="rect" coords="155,67,195,99" href="#var" title="var"><area shape="rect" coords="201,155,291,187" href="#Expression" title="Expression"><area shape="rect" coords="237,221,327,253" href="#Expression" title="Expression"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="Term">Term:</a></p><img border="0" src="~/docs/img/term.png" height="273" width="507" usemap="#Term.map"><map name="Term.map"><area shape="rect" coords="155,67,195,99" href="#var" title="var"><area shape="rect" coords="201,155,291,187" href="#Expression" title="Expression"><area shape="rect" coords="237,221,327,253" href="#Expression" title="Expression"></map><p>
 
 <div class="ebnf"><code>
 
@@ -253,7 +253,7 @@ The following grammar is written in eBNF (extended Backus-Naur Form) to show the
 
 <li><a href="#MultiplicativeExpression" title="MultiplicativeExpression">MultiplicativeExpression</a></li>
 </ul>
-</p><br><p style="font-size: 14px; font-weight:bold"><a name="var">var:</a></p><img border="0" src="docs/img/var.png" height="69" width="383" usemap="#var.map"><map name="var.map"><area shape="rect" coords="197,33,287,65" href="#Expression" title="Expression"></map><p>
+</p><br><p style="font-size: 14px; font-weight:bold"><a name="var">var:</a></p><img border="0" src="~/docs/img/var.png" height="69" width="383" usemap="#var.map"><map name="var.map"><area shape="rect" coords="197,33,287,65" href="#Expression" title="Expression"></map><p>
 
 <div class="ebnf"><code>
 
