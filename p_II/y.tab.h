@@ -148,8 +148,8 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 17 "mini_l.y"
-{ //struct for id/Numberz values
+#line 20 "mini_l.y"
+{ //struct for id/number values
   char* id_val;
   int no_val;
 }

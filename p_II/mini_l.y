@@ -5,16 +5,19 @@
 	#include "string.h"
 	#include "y.tab.h"
 	extern const char* yytext;
+	//old int counters for position from mini_l.l:
 	extern int num_lines;
 	extern int num_column;
-	
-	void yyerror(const char *msg);
-	int yylex();
+	//error feu
+	void yyerror(const char *msg) {
+	printf("Line %d, pos %d:\n Error: %s\n", num_lines, num_column, msg);
+	}
+	int yylex(); //implicit function declaratioin
 
-	extern FILE *yyin;
+	extern FILE *yyin; //just in case lol
 %} // header file part ends here 
 
-%union{ //struct for id/Numberz values
+%union{ //struct for id/number values
   char* id_val;
   int no_val;
 }
@@ -29,51 +32,41 @@
 %left EQ NEQ LT GT LTE GTE
 %left SUB ADD MULT DIV MOD
 %right NOT ASSIGN UMINUS
-    // 0
+//%nonassoc UMINUS
+    // 0 precedence
 %type<id_val> IDENT // declared token values
-%type<no_val> NUMBER
+%type<no_val> NUMBER //this way it doesn't get recast/redefined
 
 %%
 
-Program: functions {printf("Program -> functions\n");}
+Program: prog_to_feu {printf("Program -> prog_to_feu\n");}
 	  ;
 
-functions: /* epsilon */ {printf("functions -> epsilon\n");}
-	 | function functions	{printf("functions -> function functions\n");}
+prog_to_feu: /* ? */ {printf("prog_to_feu -> ?\n");}
+	 | function prog_to_feu	{printf("prog_to_feu -> function prog_to_feu\n");}
 	 ;
 
-function:   FUNCTION ident SEMICOLON 
-            BEGIN_PARAMS dec_loop END_PARAMS 
-            BEGIN_LOCALS dec_loop END_LOCALS
-            BEGIN_BODY statement_loop END_BODY
-            {
-               printf("function -> FUNCTION ident SEMICOLON ");
-               printf("BEGIN_PARAMS dec_loop END_PARAMS ");
-               printf("BEGIN_LOCALS dec_loop END_LOCALS ");
-               printf("BEGIN_BODY statement_loop END_BODY\n");
-            }
+function:   FUNCTION ident SEMICOLON BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
+               printf("function -> FUNCTION ident SEMICOLON "); printf("BEGIN_PARAMS declarations END_PARAMS "); printf("BEGIN_LOCALS declarations END_LOCALS "); printf("BEGIN_BODY statements END_BODY\n"); }
             ;
          
-dec_loop:    /* epsilon */ {printf("dec_loop -> epsilon\n");}
-        |   declaration SEMICOLON dec_loop{printf("dec_loop -> declaration SEMICOLON dec_loop\n");}
-        |   declaration error dec_loop{yyerrok; yyerror("Syntax error, missing semicolon in declaration.");}
+declarations:    /* ? */ {printf("declarations -> ?\n");}
+        |   declaration SEMICOLON declarations{printf("declarations -> declaration SEMICOLON declarations\n");}
+        |   declaration error declarations{yyerrok; yyerror("Syntax error, missing semicolon in declaration."); }
         ;
 
-statement_loop:   statement SEMICOLON {printf("statement_loop -> statement SEMICOLON\n");}
-               | statement error {yyerrok; yyerror("Syntax error, missing semicolon in statement.");}
-               | statement_loop statement SEMICOLON {printf("statement_loop -> statement_loop statement SEMICOLON\n");}
-               | statement_loop statement error {yyerrok; yyerror("Syntax error, missing semicolon in statement.");}
-               ;
             
 
-declaration:   id_loop COLON assignment {printf("declaration -> id_loop COLON assignment\n");}
-            |  id_loop error assignment {yyerrok; yyerror("Syntax error, invalid declaration, missing colon.");}
+declaration:   identz COLON assignment {printf("declaration -> identz COLON assignment\n");}
+            |  identz error assignment {yyerrok; yyerror("Syntax error, invalid declaration, missing colon.");}
                ;
             
-id_loop: ident {printf("id_loop -> ident\n");}
-      | id_loop COMMA ident {printf("id_loop -> id_loop COMMA ident\n");}
-      | id_loop error ident {yyerrok; yyerror("Syntax error, missing comma inbetween identifiers.");}
-      ;
+statements:   statement SEMICOLON {printf("statements -> statement SEMICOLON\n");}
+               | statement error {yyerrok; yyerror("Syntax error, missing semicolon in statement.");}
+               | statements statement SEMICOLON { printf("statements -> statements statement SEMICOLON\n");}
+               | statements statement error { yyerrok; yyerror("Syntax error, missing semicolon in statement."); }
+               ;
+
 
 assignment: INTEGER {printf("assignment -> INTEGER\n");}
          | ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("assignment -> ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER\n", $3);}
@@ -81,70 +74,29 @@ assignment: INTEGER {printf("assignment -> INTEGER\n");}
                            {printf("assignment -> ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER\n", $3, $6);}
          ;
 
-statement: A {printf("statement -> A\n");}
-         | B {printf("statement -> B\n");}
-         | C {printf("statement -> C\n");}
-         | D {printf("statement -> D\n");}
-         | E {printf("statement -> E\n");}
-         | F {printf("statement -> F\n");}
-         | G {printf("statement -> G\n");}
-         | H {printf("statement -> H\n");}
-         | I {printf("statement -> I\n");}
+statement:  var ASSIGN expression {printf("A -> var ASSIGN expression\n");} | var error expression {yyerrok; yyerror("Syntax error, \":=\" expected.");}
+         | IF bool_expr THEN statements ENDIF {printf("B -> IF bool_expr THEN statements ENDIF\n");} | IF bool_expr THEN statements ELSE statements ENDIF {printf("B -> IF bool_expr THEN statements ELSE statements ENDIF\n");}
+         | WHILE bool_expr BEGINLOOP statements ENDLOOP {printf("C -> WHILE bool_expr BEGINLOOP statements ENDLOOP\n");}
+         | DO BEGINLOOP statements ENDLOOP WHILE bool_expr {printf("D -> DO BEGINLOOP statements ENDLOOP WHILE bool_expr");}
+         | FOR var ASSIGN NUMBER SEMICOLON bool_expr SEMICOLON var ASSIGN expression BEGINLOOP statements ENDLOOP { printf("E -> FOR var ASSIGN NUMBER %d SEMICOLON bool_expr SEMICOLON var ASSIGN expression BEGINLOOP statements ENDLOOP\n", $4); } | FOR var ASSIGN NUMBER error bool_expr SEMICOLON var ASSIGN expression BEGINLOOP statements ENDLOOP { {yyerrok; yyerror("Syntax error, missing first comma in for loop");} } | FOR var ASSIGN NUMBER SEMICOLON bool_expr error var ASSIGN expression BEGINLOOP statements ENDLOOP { {yyerrok; yyerror("Syntax error, missing second comma in for loop");} }
+         | READ varz {printf("F -> READ varz\n");}
+         | WRITE varz {printf("G -> WRITE varz\n");}
+         | CONTINUE {printf("H -> CONTINUE\n");};
+         | RETURN expression {printf("I -> RETURN expression\n");};
          ;
 
-A: var ASSIGN expression {printf("A -> var ASSIGN expression\n");}
-   | var error expression {yyerrok; yyerror("Syntax error, \":=\" expected.");}
+
+
+bool_expr: relation_and_expr bool_exprz {printf("bool_expr -> relation_and_expr bool_exprz\n");}
    ;
-
-B: IF bool_expr THEN statement_loop ENDIF {printf("B -> IF bool_expr THEN statement_loop ENDIF\n");}
-   | IF bool_expr THEN statement_loop ELSE statement_loop ENDIF {printf("B -> IF bool_expr THEN statement_loop ELSE statement_loop ENDIF\n");}
-   ;
-
-C: WHILE bool_expr BEGINLOOP statement_loop ENDLOOP {printf("C -> WHILE bool_expr BEGINLOOP statement_loop ENDLOOP\n");}
-   ;
-
-D: DO BEGINLOOP statement_loop ENDLOOP WHILE bool_expr {printf("D -> DO BEGINLOOP statement_loop ENDLOOP WHILE bool_expr");}
-   ;
-
-E: FOR var ASSIGN NUMBER SEMICOLON bool_expr SEMICOLON var ASSIGN expression BEGINLOOP statement_loop ENDLOOP 
-   {
-      printf("E -> FOR var ASSIGN NUMBER %d SEMICOLON bool_expr SEMICOLON var ASSIGN expression BEGINLOOP statement_loop ENDLOOP\n", $4);
-   }
-   | FOR var ASSIGN NUMBER error bool_expr SEMICOLON var ASSIGN expression BEGINLOOP statement_loop ENDLOOP 
-   {
-      {yyerrok; yyerror("Syntax error, missing first comma in for loop");}
-   }
-   | FOR var ASSIGN NUMBER SEMICOLON bool_expr error var ASSIGN expression BEGINLOOP statement_loop ENDLOOP 
-   {
-      {yyerrok; yyerror("Syntax error, missing second comma in for loop");}
-   }
-   ;
-
-F: READ var_loop {printf("F -> READ var_loop\n");}
-   ;
-
-G: WRITE var_loop {printf("G -> WRITE var_loop\n");}
-   ;
-
-var_loop:  var {printf("var_loop -> var\n");}
-         | var COMMA var_loop {printf("var_loop -> var COMMA var_loop \n");}
-         | var var_loop {printf("Syntax error at line %d position %d: Missing comma in variable list.\n", num_lines, num_column);}
-         ;
-
-H: CONTINUE {printf("H -> CONTINUE\n");};
-
-I: RETURN expression {printf("I -> RETURN expression\n");};
-
-bool_expr: relation_and_expr bool_expr_loop {printf("bool_expr -> relation_and_expr bool_expr_loop\n");}
-   ;
-bool_expr_loop:   /* epsilon */ {printf("bool_expr_loop -> epsilon\n");}
-               | bool_expr_loop OR relation_and_expr {printf("bool_expr_loop -> bool_expr_loop OR relation_and_expr\n");}
+bool_exprz:   /* ? */ {printf("bool_exprz -> ?\n");}
+               | bool_exprz OR relation_and_expr {printf("bool_exprz -> bool_exprz OR relation_and_expr\n");}
                ;
 
-relation_and_expr: relation_expr relation_and_expr_loop {printf("relation_and_expr -> relation_expr relation_and_expr_loop\n");}
+relation_and_expr: relation_expr r_a_ez {printf("relation_and_expr -> relation_expr r_a_ez\n");}
    ;
-relation_and_expr_loop:   /* epsilon */ {printf("relation_and_expr_loop -> epsilon\n");}
-               | relation_and_expr_loop AND relation_expr {printf("relation_and_expr_loop -> relation_and_expr_loop AND relation_expr\n");}
+r_a_ez:   /* ? */ {printf("r_a_ez -> ?\n");}
+               | r_a_ez AND relation_expr {printf("r_a_ez -> r_a_ez AND relation_expr\n");}
                ;
 
 relation_expr: relations {printf("relation_expr -> relations\n");}
@@ -164,46 +116,54 @@ comp: EQ {printf("comp -> EQ\n");}
    |  GTE {printf("comp -> GTE\n");}
    ;
 
-expression: multiplicative_expr expression_loop {printf("expression -> multiplicative_expr expression_loop\n");}
+expression: multiplicative_expr expressions {printf("expression -> multiplicative_expr expressions\n");}
          ;
-expression_loop:  /* epsilon */ {printf("expression_loop -> EPSILON\n");}
-               |  expression_loop ADD multiplicative_expr {printf("expression_loop ->  expression_loop ADD multiplicative_expr\n");}
-               |  expression_loop SUB multiplicative_expr {printf("expression_loop -> expression_loop SUB multiplicative_expr\n");}
+expressions:  /* ? */ {printf("expressions -> ?\n");}
+               |  expressions ADD multiplicative_expr {printf("expressions ->  expressions ADD multiplicative_expr\n");}
+               |  expressions SUB multiplicative_expr {printf("expressions -> expressions SUB multiplicative_expr\n");}
                ;
 
-multiplicative_expr: term multi_loop {printf("multiplicative_expr -> term multi_loop\n");}
+multiplicative_expr: term multiplicative_group {printf("multiplicative_expr -> term multiplicative_group\n");}
                   ;
-multi_loop: /* epsilon */ {printf("multi_loop -> EPSILON\n");}
-         |  multi_loop MULT term {printf("multi_loop -> multi_loop MULT term\n");}
-         |  multi_loop DIV term {printf("multi_loop -> multi_loop DIV term\n");}
-         |  multi_loop MOD term  {printf("multi_loop -> multi_loop MOD term\n");}
+multiplicative_group: /* ? */ {printf("multiplicative_group -> ?\n");}
+         |  multiplicative_group MULT term {printf("multiplicative_group -> multiplicative_group MULT term\n");}
+         |  multiplicative_group DIV term {printf("multiplicative_group -> multiplicative_group DIV term\n");}
+         |  multiplicative_group MOD term  {printf("multiplicative_group -> multiplicative_group MOD term\n");}
          ;
 
-term: term_top {printf("term -> term_top\n");}
-   |  SUB term_top %prec UMINUS {printf("term -> SUB term_top\n");}
-   |  ident term_expression {printf("term -> ident term_expression\n");}
-   ;
-term_top: var {printf("term_top -> var\n");}
-      |  NUMBER {printf("term_top -> NUMBER %d\n", $1);}
-      |  L_PAREN expression R_PAREN {printf("term_top -> L_PAREN expression R_PAREN\n");}
-      ;
-term_expression: L_PAREN term_exp R_PAREN {printf("term_expression -> L_PAREN term_exp R_PAREN\n");}
+term: precedence {printf("term -> precedence\n");}
+   |  SUB precedence %prec UMINUS {printf("term -> SUB precedence\n");}
+   |  ident L_PAREN term_comma_err R_PAREN {printf("term_expression -> L_PAREN term_comma_err R_PAREN\n");}
                | L_PAREN R_PAREN {printf("term_expression -> L_PAREN R_PAREN\n");}
-               ;
-term_exp:   expression {printf("term_exp -> expression\n");}
-         |  expression COMMA term_exp {printf("term_exp -> expression COMMA term_exp");}
-         |  expression error term_exp {yyerrok; yyerror("Syntax error, missing comma inbetween expressions.");}
+   ;
+
+term_comma_err:   expression {printf("term_comma_err -> expression\n");}
+         |  expression COMMA term_comma_err {printf("term_comma_err -> expression COMMA term_comma_err");}
+         |  expression error term_comma_err {yyerrok; yyerror("Syntax error, missing comma between expressions.");}
+         ;
+
+precedence: var {printf("precedence -> var\n");}
+      |  NUMBER {printf("precedence -> NUMBER %d\n", $1);}
+      |  L_PAREN expression R_PAREN {printf("precedence -> L_PAREN expression R_PAREN\n");}
+      ;
+
+
+varz:  var {printf("varz -> var\n");}
+         | var COMMA varz {printf("varz -> var COMMA varz \n");}
+         | var varz {printf("Syntax error at line %d position %d: Missing comma in variable list.\n", num_lines, num_column);}
          ;
 
 var:  ident {printf("var -> ident\n");}
    |  ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var -> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");}
-   |  ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET
-      {
-         printf("var -> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");
-      }
+   |  ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET { printf("var -> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n"); }
    ;
 
-ident:   IDENT {printf("ident -> IDENT %s\n", yytext);}
+identz: ident {printf("identz -> ident\n");}
+      | identz COMMA ident {printf("identz -> identz COMMA ident\n");}
+      | identz error ident {yyerrok; yyerror("Syntax error, missing comma.");}
+      ;
+
+ident: IDENT {printf("ident -> IDENT %s\n", yytext);}
       ;
 
 %%
@@ -214,12 +174,10 @@ int main(int argc, char **argv) {
       yyin = fopen(argv[1], "r");
       if (yyin == NULL){
          printf("syntax: %s filename\n", argv[0]);
-      }//end if
-   }//end if
+    } // else {
+	// 	  yyin == stdin;
+	//   }
+   }
    yyparse(); // Calls yylex() for tokens.
    return 0;
-}
-
-void yyerror(const char *msg) {
-	printf("Line %d, pos %d:\n Error: %s\n", num_lines, num_column, msg);
 }
