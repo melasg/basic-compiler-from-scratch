@@ -35,5 +35,5 @@ jobs:
       - name: now test it according to project specifications
         run: |
           cd $GITHUB_WORKSPACE/p_II/
-          cat fibonacci.min | ./parser > deptest_fib
-          cat mytest.min | ./parser > deptest_myt
+          cat fibonacci.min | ./parser > test_fib
+          cat mytest.min | ./parser > test_mytest
