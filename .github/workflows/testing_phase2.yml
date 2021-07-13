@@ -23,16 +23,6 @@ jobs:
       # Runs a single command using the runners shell
       - name: Dependencies installed?
         run: sudo apt-get update && sudo apt-get install -y bison flex gcc libfl-dev wget
-      - name: remove previous files for a fresh Build
-        run: |
-          cd $GITHUB_WORKSPACE/p_II/
-          rm parser
-          rm mini_l.lex
-          rm y.tab.c
-          rm lex.yy.c
-          rm mini_l.y
-      - name: copy over old mini_l.lex file from part 1
-        run: mv $GITHUB_WORKSPACE/p_I/mini_l.lex $GITHUB_WORKSPACE/p_II/mini_l.lex
       - name: re-run part i fresh 
         run: |
           cd $GITHUB_WORKSPACE/p_II/
