@@ -116,7 +116,7 @@ varz: var {printf("varz -> var\n");}
 		|var COMMA varz {printf("varz -> var COMMA varz\n");}
 ;
 var: Identifier {printf("var -> Identifier\n");}
-		| Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET {printf("var '\045'> Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET\n");}
+		| Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET {printf("var -> Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET\n");}
 
 ;
 %%
