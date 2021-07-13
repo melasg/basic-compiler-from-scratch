@@ -1,78 +1,264 @@
 %{
 #include <iostream>
-#include <cstdlib>
+#include <stdio.h>
+#include <stlib.h>
+#include <unistd.h>
+#include <string> // in case? string
+#include "y.tab.h"
+
+#define YY_NO_UNPUT
+
 using namespace std;
-        int num_lines = 1, num_column = 1;
+
+void yyerror(const char * errmsg);
+
 %}
+
 %option noyywrap
 %option nounput
+// definitions
+DIGIT [0-9]
+LETTER [a-zA-Z]
+UNDERSCORE _
+COMMENT ##.*\n
+        // RULES
+                // misc
+ASSIGN                          ":="
+COMMENT                         "##"
+L_PAREN                         "("
+R_PAREN                         ")"
+L_SQUARE_BRACKET                "["
+R_SQUARE_BRACKET                "]"
+COLON                           ":"
+COMMA                           ","
+SEMICOLON                       ";"
+                // feu. calls
+FUNCTION                        "function"
+BEGIN_PARAMS                    "beginparams"
+END_PARAMS                      "endparams"
+BEGIN_LOCALS                    "beginlocals"
+END_LOCALS                      "endlocals"
+BEGIN_BODY                      "beginbody"
+END_BODY                        "endbody"
+                // array subscripting
+INTEGER                         "integer"
+ARRAY                           "array"
+OF                              "of"
+IF                              "if"
+THEN                            "then"
+ENDIF                           "endif"
+ELSE                            "else"
+WHILE                           "while"
+DO                              "do"
+BEGINLOOP                       "beginloop"
+ENDLOOP                         "endloop"
+CONTINUE                        "continue"
+READ                            "read"
+WRITE                           "write"
+RETURN                          "return"
+                // comp. operators
+AND                             "and"
+OR                              "or"
+NOT                             "not"
+TRUE                            "true"
+FALSE                           "false"
+LT                              "<"
+GT                              ">"
+LTE                             "<="
+GTE                             ">="
+EQ                              "=="
+NEQ                             "<>"
+                // ARITHMETIC
+SUB                             "-"
+ADD                             "+"
+MULT                            "*"
+DIV                             "/"
+MOD                             "%"
+%{
+	int posx = 1, posy = 1; //sort error by position of error by row then column
+%}
+// definitions follow 
 %%
-[0-9]+     {yylval.exp = new Num(atoi(yytext)); return NUM;}
-[a-zA-Z0-9_]+ {yylval.id = new Id(yytext); return ID;}
-function        printf("FUNCTION\n"); num_column += yyleng;
-beginparams     printf("BEGIN_PARAMS\n"); num_column += yyleng;
-endparams       printf("END_PARAMS\n"); num_column += yyleng;
-beginlocals     printf("BEGIN_LOCALS\n"); num_column += yyleng;
-endlocals       printf("END_LOCALS\n"); num_column += yyleng;
-beginbody       printf("BEGIN_BODY\n"); num_column += yyleng;
-endbody         printf("END_BODY\n"); num_column += yyleng;
-integer         printf("INTEGER\n"); num_column += yyleng;
-array           printf("ARRAY\n"); num_column += yyleng;
-of              printf("OF\n"); num_column += yyleng;
-then            printf("THEN\n"); num_column += yyleng;
-endif           printf("ENDIF\n"); num_column += yyleng;
-if         {return IF;}
-ifelse     {return IFELSE;}
-while      {return WHILE;}
-read       {return READ;}
-write      {return WRITE;}
-do              printf("DO\n"); num_column += yyleng;
-for             printf("FOR\n"); num_column += yyleng;
-beginloop       printf("BEGINLOOP\n"); num_column += yyleng;
-endloop         printf("ENDLOOP\n"); num_column += yyleng;
-continue        printf("CONTINUE\n"); num_column += yyleng;
-and|or     {yylval.op = (yytext[0] == 'a' ? AND : OR); return BOP;}
-not        {yylval.op = NOT; return NOTTOK;}
-true|false {yylval.exp = new BoolExp(yytext[0] == 't'); return BOOL;}
-{ID}            printf("IDENT %s\n", yytext); num_column += yyleng; //{yyval=install_id(); return ID;}
-{CHAR}          printf("IDENT %s\n", yytext); num_column += yyleng;
-[><=]|([><!]=) {yylval.op = getCompOp(yytext); return COMP;}
-":="       {return ASN;}
-[+-]       {yylval.op = (yytext[0] == '+' ? ADD : SUB); return OPA;}
-[*/]       {yylval.op = (yytext[0] == '*' ? MUL : DIV); return OPM;}
-"%"             printf("MOD\n"); num_column += yyleng;
-"<"             printf("LT\n"); num_column += yyleng;
-">"             printf("GT\n"); num_column += yyleng;
-";"        {return STOP;}
-":"             printf("COLON\n"); num_column += yyleng;
-","             printf("COMMA\n"); num_column += yyleng;
-"("        {return LP;}
-")"        {return RP;}
-"["             printf("L_SQUARE_BRACKET\n"); num_column += yyleng;
-"]"             printf("R_SQUARE_BRACKET\n"); num_column += yyleng;
-
-<<EOF>>         { return 0; }
-[ \t\n]+ { }
-"#".*    { }
-.        { scanerror(); return -1; }
-
+{COMMENT}.*
+({DIGIT}|{UNDERSCORE}({LETTER}|{DIGIT}|{UNDERSCORE}))*
+({LETTER}|{DIGIT}|{UNDERSCORE})+{UNDERSCORE}
+{LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
+{NUMBER}+
+        posx = posx + yyleng;
+        yylval.no_val = atoi(yytext);
+        return NUMBER;
+{ASSIGN}
+        posx = posx + yyleng;
+        return ASSIGN;
+{L_PAREN}
+        posx = posx + yyleng;
+        return L_PAREN;
+{R_PAREN}
+        posx = posx + yyleng;
+        return R_PAREN;
+{L_SQUARE_BRACKET}
+        posx = posx + yyleng;
+        return R_SQUARE_BRACKET;
+{R_SQUARE_BRACKET}
+        posx = posx + yyleng;
+        return L_SQUARE_BRACKET;
+{COLON}
+        posx = posx + yyleng;
+        return COLON;
+{COMMA}
+        posx = posx + yyleng;
+        return COMMA;
+{SEMICOLON}
+        posx = posx + yyleng;
+        return SEMICOLON;
+{BEGIN_PARAMS}
+        posx = posx + yyleng;
+        return BEGIN_PARAMS;
+{END_PARAMS}
+        posx = posx + yyleng;
+        return END_PARAMS;
+{BEGIN_LOCALS}
+        posx = posx + yyleng;
+        return BEGIN_LOCALS;
+{END_LOCALS}
+        posx = posx + yyleng;
+        return END_LOCALS;
+{END_BODY}
+        posx = posx + yyleng;
+        return END_BODY;
+{BEGINLOOP}
+        posx = posx + yyleng;
+        return BEGINLOOP;
+{INTEGER}
+        posx = posx + yyleng;
+        return INTEGER;
+{ARRAY}
+        posx = posx + yyleng;
+        return ARRAY;
+{OF}
+        posx = posx + yyleng;
+        return OF;
+{IF}
+        posx = posx + yyleng;
+        return IF;
+{THEN}
+        posx = posx + yyleng;
+        return THEN;
+{ENDIF}
+        posx = posx + yyleng;
+        return ENDIF;
+{ELSE}
+        posx = posx + yyleng;
+        return ELSE;
+{WHILE}
+        posx = posx + yyleng;
+        return WHILE;
+{DO}
+        posx = posx + yyleng;
+        return DO;
+{CONTINUE}
+        posx = posx + yyleng;
+        return CONTINUE;
+{READ}
+        posx = posx + yyleng;
+        return READ;
+{WRITE}
+        posx = posx + yyleng;
+        return WRITE;
+{AND}
+        posx = posx + yyleng;
+        return AND;
+{OR}
+        posx = posx + yyleng;
+        return OR;
+{NOT}
+        posx = posx + yyleng;
+        return NOT;
+{TRUE}
+        posx = posx + yyleng;
+        return TRUE;
+{FALSE}
+        posx = posx + yyleng;
+        return FALSE;
+{RETURN}
+        posx = posx + yyleng;
+        return RETURN;
+{SUB}
+        posx = posx + yyleng;
+        return SUB;
+{ADD}
+        posx = posx + yyleng;
+        return ADD;
+{MULT}
+        posx = posx + yyleng;
+        return MULT;
+{DIV}
+        posx = posx + yyleng;
+        return DIV;
+{MOD}
+        posx = posx + yyleng;
+        return MOD;
+{EQ}
+        posx = posx + yyleng;
+        return NEQ;
+{LT}
+        posx = posx + yyleng;
+        return LT;
+{GT}
+        posx = posx + yyleng;
+        return GT;
+{LTE}
+        posx = posx + yyleng;
+        return LTE;
+{GTE}
+        posx = posx + yyleng;
+        return GTE;
+[0-9_][a-zA-Z_0-9]+
+        printf("Error at row: %x column : %y identifier ", posy, posx);
+        ECHO;
+        printf(" must begin with a letter\n");
+        posx = posx + yyleng;
+        exit(1);
+[a-zA-Z][a-zA-Z0-9_]*[_]
+        printf("Error at row:%x, column: %y identifier ", posy, posx);
+        ECHO;
+        printf("cannot end with underscore\n");
+        posx = posx + yyleng;
+        exit(1);
+[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]*
+        pox = posx + yyleng;
+        yylval.str = new string(yytext);
+        return IDENT;
+\n
+        ++posy;
+        posx = 0;	
+" "|[\t]
+        posx = posx + yyleng;
+[ ]
+        posx = posx + yyleng;		 
+.
+        printf("Error at row: %x column:%d ; unrecognized symbol ", posy, posx);
+        ECHO;
+        printf("\n");
+        posx = posx + yyleng;
+        exit(1);
 %%
-int main( int argc, char **argv) {
-++argv, --argc;  /* skip over program name */
-if ( argc > 0 )
-        yyin = fopen( argv[0], "r" );
-else
-        yyin = stdin;
+// int main( int argc, char **argv) {
+// ++argv, --argc;  /* skip over program name */
+// if ( argc > 0 )
+//         yyin = fopen( argv[0], "r" );
+// else
+//         yyin = stdin;
 
-yylex();
-printf("number of lines = %d\n",num_lines);
-printf("number of columns = %d\n", num_column);
-}
+// yylex();
+// printf("number of lines = %d\n",posy);
+// printf("number of columns = %d\n", posx);
+// }
 
 // Called if there is a scanner error
-void scanerror() {
-  if (! error) {
-    errout << "Unrecognized token starting with " << yytext << endl;
-    error = true;
-  }
-}
+// void scanerror() {
+//   if (! error) {
+//     errout << "Unrecognized token starting with " << yytext << endl;
+//     error = true;
+//   }
+// }
