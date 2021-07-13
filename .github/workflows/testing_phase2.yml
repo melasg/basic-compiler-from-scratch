@@ -5,7 +5,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   push: 
     tags:
-    - phase2
+    - phase2*
+    - phase-2*
   release:
   workflow_dispatch:
 
