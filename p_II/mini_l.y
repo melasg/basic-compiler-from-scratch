@@ -146,4 +146,5 @@ printf("number of columns = %d\n", posx);
 yyerror(const char * errmsg) {
   printf("ERROR: at %s symbol %s ", errmsg, yytext);
 	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
+	return 0;
 }
