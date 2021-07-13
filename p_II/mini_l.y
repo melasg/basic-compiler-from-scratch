@@ -16,8 +16,6 @@ void yyerror(const char * errmsg) {
 	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
   }
 %} // header file part ends here 
-// Yacc/Bison Declarations
-%error-verbose          /* telling bison to give me more errors */
 %union{ //struct for id/Number values
   char* id_val;
   int no_val;
@@ -39,6 +37,7 @@ void yyerror(const char * errmsg) {
 %token L_SQUARE_BRACKET R_SQUARE_BRACKET
 %token L_PAREN R_PAREN
 
+%define parse.error verbose
 %start Program // here is the program start, bison requires it
 /* 
                   GRAMMAR RULES BEGIN, CONVERTED FROM EBNF
@@ -47,14 +46,14 @@ void yyerror(const char * errmsg) {
 Program: %empty	{ printf("Program -> EPSILON\n"); }
 		| Function Program { printf("Program -> Function Program\n"); }
 ;
-Function: Function Identifier SEMICOLON	BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY {printf("Function -> Function Identifier SEMICOLON BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY\n");}
+Function: FUNCTION Identifier SEMICOLON	BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY {printf("Function -> FUNCTION Identifier SEMICOLON BEGIN_PARAMS Declarations END_PARAMS BEGIN_LOCALS Declarations END_LOCALS BEGIN_BODY Statements END_BODY\n");}
 ;
 Identifier: IDENT {printf("Identifier -> IDENT %s\n", $1);}
 ;
 Identifiers: Identifier	{printf("Identifiers -> Identifier\n");}
 		| Identifier COMMA Identifiers	{printf("Identifiers -> Identifier COMMA Identifiers\n");}
 ;
-Number: Number {printf("Number -> Number %d\n", $1);}
+Number: NUMBER {printf("Number -> NUMBER %d\n", $1);}
 ;
 Declaration: Identifiers COLON ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF INTEGER {printf("Declaration -> Identifiers COLON ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF INTEGER\n");}
 		| Identifiers COLON INTEGER {printf("Declaration -> Identifiers COLON INTEGER\n");}
