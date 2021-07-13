@@ -110,7 +110,7 @@ Multiplicative-Expr: Term {printf("Multiplicative-Expr -> Term\n");}
 		| Term MOD Multiplicative-Expr {printf("Multiplicative-Expr -> Term MOD Multiplicative-Expr\n");}
 ;
 Term: var {printf("Term -> var\n");}
-		| Numberz {printf("Term -> numberz\n");}
+		| numberz {printf("Term -> numberz\n");}
 		| L_PAREN Expression R_PAREN {printf("Term -> L_PAREN Expression R_PAREN\n");}
 		| SUB var %prec UMINUS {printf("Term -> SUB var\n");}
 		| SUB numberz %prec UMINUS {printf("Term -> SUB numberz\n");}
