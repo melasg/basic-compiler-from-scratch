@@ -39,109 +39,109 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     IDENT = 258,
-     NUMBER = 259,
-     FUNCTION = 260,
-     BEGIN_PARAMS = 261,
-     END_PARAMS = 262,
-     BEGIN_LOCALS = 263,
-     END_LOCALS = 264,
-     BEGIN_BODY = 265,
-     END_BODY = 266,
-     INTEGER = 267,
-     ARRAY = 268,
-     OF = 269,
-     IF = 270,
-     THEN = 271,
-     ENDIF = 272,
-     ELSE = 273,
-     WHILE = 274,
-     DO = 275,
-     FOR = 276,
-     BEGINLOOP = 277,
-     ENDLOOP = 278,
-     CONTINUE = 279,
-     READ = 280,
-     WRITE = 281,
+     FUNCTION = 258,
+     BEGIN_PARAMS = 259,
+     END_PARAMS = 260,
+     BEGIN_LOCALS = 261,
+     END_LOCALS = 262,
+     BEGIN_BODY = 263,
+     END_BODY = 264,
+     INTEGER = 265,
+     ARRAY = 266,
+     OF = 267,
+     IF = 268,
+     THEN = 269,
+     ENDIF = 270,
+     ELSE = 271,
+     WHILE = 272,
+     DO = 273,
+     FOR = 274,
+     BEGINLOOP = 275,
+     ENDLOOP = 276,
+     CONTINUE = 277,
+     READ = 278,
+     WRITE = 279,
+     AND = 280,
+     OR = 281,
      TRUE = 282,
      FALSE = 283,
      RETURN = 284,
      SEMICOLON = 285,
      COLON = 286,
      COMMA = 287,
-     ASSIGN = 288,
-     OR = 289,
-     AND = 290,
-     NOT = 291,
-     NEQ = 292,
-     EQ = 293,
+     L_PAREN = 288,
+     R_PAREN = 289,
+     L_SQUARE_BRACKET = 290,
+     R_SQUARE_BRACKET = 291,
+     IDENT = 292,
+     NUMBER = 293,
      GTE = 294,
-     GT = 295,
-     LTE = 296,
+     LTE = 295,
+     GT = 296,
      LT = 297,
-     SUB = 298,
-     ADD = 299,
+     NEQ = 298,
+     EQ = 299,
      MOD = 300,
-     MULT = 301,
-     DIV = 302,
-     UMINUS = 303,
-     L_SQUARE_BRACKET = 304,
-     R_SQUARE_BRACKET = 305,
-     L_PAREN = 306,
-     R_PAREN = 307
+     DIV = 301,
+     MULT = 302,
+     ADD = 303,
+     SUB = 304,
+     UMINUS = 305,
+     ASSIGN = 306,
+     NOT = 307
    };
 #endif
 /* Tokens.  */
-#define IDENT 258
-#define NUMBER 259
-#define FUNCTION 260
-#define BEGIN_PARAMS 261
-#define END_PARAMS 262
-#define BEGIN_LOCALS 263
-#define END_LOCALS 264
-#define BEGIN_BODY 265
-#define END_BODY 266
-#define INTEGER 267
-#define ARRAY 268
-#define OF 269
-#define IF 270
-#define THEN 271
-#define ENDIF 272
-#define ELSE 273
-#define WHILE 274
-#define DO 275
-#define FOR 276
-#define BEGINLOOP 277
-#define ENDLOOP 278
-#define CONTINUE 279
-#define READ 280
-#define WRITE 281
+#define FUNCTION 258
+#define BEGIN_PARAMS 259
+#define END_PARAMS 260
+#define BEGIN_LOCALS 261
+#define END_LOCALS 262
+#define BEGIN_BODY 263
+#define END_BODY 264
+#define INTEGER 265
+#define ARRAY 266
+#define OF 267
+#define IF 268
+#define THEN 269
+#define ENDIF 270
+#define ELSE 271
+#define WHILE 272
+#define DO 273
+#define FOR 274
+#define BEGINLOOP 275
+#define ENDLOOP 276
+#define CONTINUE 277
+#define READ 278
+#define WRITE 279
+#define AND 280
+#define OR 281
 #define TRUE 282
 #define FALSE 283
 #define RETURN 284
 #define SEMICOLON 285
 #define COLON 286
 #define COMMA 287
-#define ASSIGN 288
-#define OR 289
-#define AND 290
-#define NOT 291
-#define NEQ 292
-#define EQ 293
+#define L_PAREN 288
+#define R_PAREN 289
+#define L_SQUARE_BRACKET 290
+#define R_SQUARE_BRACKET 291
+#define IDENT 292
+#define NUMBER 293
 #define GTE 294
-#define GT 295
-#define LTE 296
+#define LTE 295
+#define GT 296
 #define LT 297
-#define SUB 298
-#define ADD 299
+#define NEQ 298
+#define EQ 299
 #define MOD 300
-#define MULT 301
-#define DIV 302
-#define UMINUS 303
-#define L_SQUARE_BRACKET 304
-#define R_SQUARE_BRACKET 305
-#define L_PAREN 306
-#define R_PAREN 307
+#define DIV 301
+#define MULT 302
+#define ADD 303
+#define SUB 304
+#define UMINUS 305
+#define ASSIGN 306
+#define NOT 307
 
 
 
