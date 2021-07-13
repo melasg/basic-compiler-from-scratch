@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char *msg) {
-	extern posy, posx;
+	extern int posy, posx;
 	extern char* yytext;
   //printf("ERROR: at %s symbol %s ", msg, yytext);
   printf("Error: On line %d, character %d: %s \n", posy, posx, msg);
