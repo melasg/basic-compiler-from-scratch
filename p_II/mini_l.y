@@ -3,10 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int yylex(void); /* function prototype */
-void yyerror(const char *msg);
-
 extern FILE * yyin;
+int yylex(void); /* function prototype */
+void yyerror(const char *msg) {
+	extern int num_column, num_lines;
+	extern char* yytext;
+  //printf("ERROR: at %s symbol %s ", msg, yytext);
+  printf("Error: On line %d, character %d: %s \n", num_lines, num_column, msg);
+}
   //error feu
 
 %} // header file part ends here 
@@ -135,11 +139,4 @@ int main(int argc, char **argv) {
 			}
 	yyparse(); //call yylex for tokens
 	return 0;
-}
-
-void yyerror(const char *msg) {
-	extern int num_column, num_lines;
-	extern char* yytext;
-  //printf("ERROR: at %s symbol %s ", msg, yytext);
-  printf("Error: On line %d, character %d: %s \n", num_lines, num_column, msg);
 }
