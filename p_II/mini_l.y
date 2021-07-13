@@ -53,7 +53,7 @@ Identifier: IDENT {printf("Identifier -> IDENT %s\n", $1);}
 Identifiers: Identifier	{printf("Identifiers -> Identifier\n");}
 		| Identifier COMMA Identifiers	{printf("Identifiers -> Identifier COMMA Identifiers\n");}
 ;
-numberz: NUMBER {printf("numberz -> NUMBER %d\n", $1);}
+numberz: NUMBER { printf("numberz -> NUMBER %d\n", $1); }
 ;
 Declaration: Identifiers COLON ARRAY L_SQUARE_BRACKET numberz R_SQUARE_BRACKET OF INTEGER {printf("Declaration -> Identifiers COLON ARRAY L_SQUARE_BRACKET numberz R_SQUARE_BRACKET OF INTEGER\n");}
 		| Identifiers COLON INTEGER {printf("Declaration -> Identifiers COLON INTEGER\n");}
