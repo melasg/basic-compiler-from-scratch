@@ -127,24 +127,23 @@ var: Identifier {printf("var -> Identifier\n");}
                             /* End of grammar */
 // Additional C code
 int main(int argc, char **argv) {
+ ++argv, --argc;  /* skip over program name */
  if (argc > 1){
    yyin = fopen(argv[1], "r");
-   if (yyin == NULL){
+ if (yyin == NULL){
      printf("syntax: %s filename\n", argv[0]);
    }
+ else {
+	   yyin=stdin;
+   }
  }
-//  if (argc!=2){
-//    fprintf(stderr,"usage: a.out filename\n");
-//    exit(1);
-//    }
-   else {
-     yyin = stdin;
-     }
-     yyparse(argv[1]);
-     return 0;
+yylex();
+printf("number of lines = %d\n",posy);
+printf("number of columns = %d\n", posx)
+	return 0;
 }
 
 void yyerror(const char * errmsg) {
-  printf("ERROR: at %s symbol %d ", errmsg, yytext);
+  printf("ERROR: at %s symbol %s ", errmsg, yytext);
 	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
   }
