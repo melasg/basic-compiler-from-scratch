@@ -4,8 +4,8 @@
 #include <stdio.h>
 
 int yylex(void); /* function prototype */
-int yyerror(const char * errrmsg);
-extern int posy, posx;
+void yyerror(const char *msg);
+int posy, posx;
 
 extern FILE * yyin;
 extern char *yytext;
@@ -143,8 +143,8 @@ printf("number of columns = %d\n", posx);
 	return 0;
 }
 
-int yyerror(const char * errmsg) {
-  printf("ERROR: at %s symbol %s ", errmsg, yytext);
+void yyerror(const char * msg) {
+  printf("ERROR: at %s symbol %s ", msg, yytext);
 	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
 	return 0;
 }

@@ -1,5 +1,7 @@
 %{
         #include <stdio.h>
+        #include <unistd.h>
+        #include "y.tab.h"
         int num_lines = 1, num_column = 1;
 %}
 DIGIT   [0-9]
@@ -67,14 +69,3 @@ false           printf("FALSE\n"); num_column += yyleng;
 {E_ID_1}        {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore\n", num_lines, num_column, yytext); exit(-1);}
 .|\n         ECHO; REJECT;
 %%
-int main( int argc, char **argv) {
-++argv, --argc;  /* skip over program name */
-if ( argc > 0 )
-        yyin = fopen( argv[0], "r" );
-else
-        yyin = stdin;
-
-yylex();
-printf("number of lines = %d\n",num_lines);
-printf("number of columns = %d\n", num_column);
-}
