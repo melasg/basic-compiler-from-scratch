@@ -2,8 +2,9 @@
 // C Declarations
 #include <stdlib.h>
 #include <stdio.h>
-int yylex(void); /* function prototype */
 
+int yylex(void); /* function prototype */
+void error(const char * errrmsg);
 extern int posy, posx;
 
 extern FILE * yyin;
@@ -11,10 +12,7 @@ extern char *yytext;
 extern int yyleng;
 
   //error feu
-void yyerror(const char * errmsg) {
-  printf("ERROR: at %f symbol %g ", errmsg, yytext);
-	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
-  }
+
 %} // header file part ends here 
 %union{ //struct for id/Numberz values
   char* id_val;
@@ -135,13 +133,18 @@ int main(int argc, char **argv) {
      printf("syntax: %s filename\n", argv[0]);
    }
  }
- if (argc!=2){
-   fprintf(stderr,"usage: a.out filename\n");
-   exit(1);
-   }
+//  if (argc!=2){
+//    fprintf(stderr,"usage: a.out filename\n");
+//    exit(1);
+//    }
    else {
      yyin = stdin;
      }
      yyparse(argv[1]);
      return 0;
 }
+
+void yyerror(const char * errmsg) {
+  printf("ERROR: at %s symbol %d ", errmsg, yytext);
+	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
+  }
