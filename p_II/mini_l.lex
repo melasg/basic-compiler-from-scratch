@@ -1,7 +1,6 @@
 %{
 #include <stdio.h>
 #include <unistd.h>
-#include "y.tab.h"
 int num_lines = 1, num_column = 1;
 %}
 DIGIT   [0-9]
