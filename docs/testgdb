@@ -1,0 +1,13 @@
+gdb a.out
+set disassembly-flavor att
+# once inside of gdb
+b main # set a breakpoint at main
+run # start the program.  it will wait at main
+si # step through each assembly instruction
+# continue stepping through to track the behavior
+
+add this to original: check cat fibonacci.min | lexer
+cat template_start.s <(cat example.toy | ./toy) template_end.s > example.s  # run the toy compiler
+diff -w example.s.expected example.s  # compare the output
+gcc -o example example.s  # assembly the output
+./example  # execute the output program
