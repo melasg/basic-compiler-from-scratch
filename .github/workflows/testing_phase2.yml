@@ -24,12 +24,6 @@ jobs:
       # Runs a single command using the runners shell
       - name: Dependencies installed?
         run: sudo apt-get update && sudo apt-get install -y bison flex gcc libfl-dev wget
-      - name: re-run part i fresh 
-        run: |
-          cd $GITHUB_WORKSPACE/p_II/
-          flex mini_l.lex
-          gcc -o lexer lex.yy.c -lfl
-          chmod +x lexer 
       - name: build parser
         run: |
           cd $GITHUB_WORKSPACE/p_II/
