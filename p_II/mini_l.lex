@@ -1,8 +1,8 @@
 %{
-        #include <stdio.h>
-        #include <unistd.h>
-        #include "y.tab.h"
-        int num_lines = 1, num_column = 1;
+#include <stdio.h>
+#include <unistd.h>
+#include "y.tab.h"
+int num_lines = 1, num_column = 1;
 %}
 DIGIT   [0-9]
 ID      [a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]

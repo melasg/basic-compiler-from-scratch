@@ -5,12 +5,8 @@
 
 int yylex(void); /* function prototype */
 void yyerror(const char *msg);
-int posy, posx;
 
 extern FILE * yyin;
-extern char *yytext;
-extern int yyleng;
-
   //error feu
 
 %} // header file part ends here 
@@ -127,24 +123,23 @@ var: Identifier {printf("var -> Identifier\n");}
                             /* End of grammar */
 // Additional C code
 int main(int argc, char **argv) {
- ++argv, --argc;  /* skip over program name */
- if (argc > 1){
-   yyin = fopen(argv[1], "r");
- if (yyin == NULL){
-     printf("syntax: %s filename\n", argv[0]);
-   }
- else {
-	   yyin=stdin;
-   }
- }
-yylex();
-printf("number of lines = %d\n",posy);
-printf("number of columns = %d\n", posx);
+	++argv, --argc;  /* skip over program name */
+	if (argc > 1){
+		yyin = fopen(argv[1], "r");
+		if (yyin == NULL){
+			printf("syntax: %s filename\n", argv[0]);
+			}
+			else {
+				yyin=stdin;
+				}
+			}
+	yyparse(); //call yylex for tokens
 	return 0;
 }
 
-void yyerror(const char * msg) {
-  printf("ERROR: at %s symbol %s ", msg, yytext);
-	printf("Error: On line %d, column %d: %s \n", posy, posx, errmsg);
-	return 0;
+void yyerror(const char *msg) {
+	extern posy, posx;
+	extern char* yytext;
+  //printf("ERROR: at %s symbol %s ", msg, yytext);
+  printf("Error: On line %d, character %d: %s \n", posy, posx, msg);
 }
