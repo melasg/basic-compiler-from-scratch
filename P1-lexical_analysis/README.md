@@ -3,6 +3,24 @@
 > 2. `gcc -o lexer lex.yy.c -lfl`
 > 3. ` cat fibonacci.min | lexer `
 
+### phase I
+### detailed requirements
+- Write the specification for a `flex` lexical analyzer for the MINI-L language. For this phase of the project, your lexical analyzer need only output the list of tokens identified from an inputted MINI-L program.
+-   Example: write the `flex` specification in a file named `mini_l.lex`.
+- Run `flex` to generate the lexical analyzer for MINI-L using your specification.
+  - Example: execute the command `flex mini_l.lex`. This will create a file called `lex.yy.c`in the current directory.
+- Compile your MINI-L lexical analyzer. This will require the `-lfl` flag for `gcc`.
+  - Example: compile your lexical analyzer into the executable lexer with the following command: `gcc -o lexer lex.yy.c -lfl`. The program lexer should now be able to convert an inputted MINI-L program into the corresponding list of tokens. 
+
+#### Example Usage
+ Suppose your lexical analyzer is in the executable named `lexer`.
+ Then for the MINI-L program `fibonacci.min`, your lexical analyzer should be invoked as follows:
+```shell
+cat fibonacci.min | lexer
+```
+ The list of tokens outputted by your lexical analyzer should then appear as they do here.
+ The tokens can be printed to the screen (standard out). 
+
 # Journey to a more efficient lexical analyzer
 ## (no hate to @srahlwes i just want to see if i can improve his code!)
 Token = lexeme
