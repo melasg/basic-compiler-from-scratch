@@ -24,16 +24,21 @@ jobs:
       # Runs a single command using the runners shell
       - name: Dependencies installed?
         run: sudo apt-get update && sudo apt-get install -y bison flex gcc libfl-dev wget
-      - name: wget mil_run
+      - name: wget mil_run.mil into tests/ and run it through interpreter
         run: |
-          cd $GITHUB_WORKSPACE/p_III/
-          wget -o mil_run https://www.cs.ucr.edu/~mafar001/compiler/webpages3/mil_run
-      - name: build parser
+          cd $GITHUB_WORKSPACE/P3-code_generation/
+          wget -o tests/mil_run.mil https://www.cs.ucr.edu/~mafar001/compiler/webpages3/mil_run
+          mil_run tests/mil_code.mil
+      - name: test 1 output to input.txt
         run: |
-          cd $GITHUB_WORKSPACE/p_III/
-          mil_run mil_code.mil < input.txt
+          cd $GITHUB_WORKSPACE/P3-code_generation/
+          touch tests/input.txt
+          mil_run mil_code.mil < tests/input.txt
       # Runs a set of commands using the runners shell
-      - name: now test it according to project specifications
+      - name: run then test through fibonacci/other tests
         run: |
-          cd $GITHUB_WORKSPACE/p_III/
+          cd $GITHUB_WORKSPACE/P3-code_generation/
+          mil_run
           cat fibonacci.min | ./boz > test1
+          cat tests/fibonacci.min | my_compiler
+          echo 5 > tests/input.txt mil_run tests/fibonacci.mil < tests/input.txt

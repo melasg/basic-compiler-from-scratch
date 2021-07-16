@@ -25,19 +25,19 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y bison flex gcc libfl-dev
       - name: remove previous files for a fresh Build
         run: |
-          cd $GITHUB_WORKSPACE/p_I/
+          cd $GITHUB_WORKSPACE/P1-lexical_analysis/
           rm lexer
           rm lex.yy.c
       - name: build lexical analyzer "lexer"
         run: |
-          cd $GITHUB_WORKSPACE/p_I/
+          cd $GITHUB_WORKSPACE/P1-lexical_analysis/
           flex mini_l.lex
           gcc -o lexer lex.yy.c -lfl
           chmod +x lexer 
       # Runs a set of commands using the runners shell
       - name: now test it according to project specifications
         run: |
-          cd $GITHUB_WORKSPACE/p_I/
-          cat fibonacci.min | ./lexer > test1.txt
-          cat primes.min | ./lexer > test2.txt
-          cat mytest.min | ./lexer > test3.txt
+          cd $GITHUB_WORKSPACE/P1-lexical_analysis/
+          cat tests/fibonacci.min | ./lexer > tests/test1
+          cat tests/primes.min | ./lexer > tests/test2
+          cat tests/mytest.min | ./lexer > tests/test3
