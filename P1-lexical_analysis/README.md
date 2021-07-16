@@ -1,3 +1,8 @@
+> ## **PHASE 1 QUICK COMMANDS**
+> 1. `flex mini_l.lex`
+> 2. `gcc -o lexer lex.yy.c -lfl`
+> 3. ` cat fibonacci.min | lexer `
+
 # Journey to a more efficient lexical analyzer
 ## (no hate to @srahlwes i just want to see if i can improve his code!)
 Token = lexeme

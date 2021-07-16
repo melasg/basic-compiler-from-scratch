@@ -59,3 +59,4 @@ dkms.conf
 .DS_Store
 bnf_send.txt
 docs/ref/bnf_ho
+.vscode/*

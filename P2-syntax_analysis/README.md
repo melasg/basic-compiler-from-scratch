@@ -1,3 +1,8 @@
+> ## **PHASE 2 QUICK COMMANDS**
+  > 1. `bison -v -d --file-prefix=y mini_l.y`
+  > 2. `flex mini_l.lex`
+  > 3. `gcc -o parser y.tab.c lex.yy.c -lfl`
+  > 4. ` cat fibonacci.min | parser `
 ## Our bison file's guts:
 | **filename** |                                                                       **Content**                                                                      |
 |:------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------:|
