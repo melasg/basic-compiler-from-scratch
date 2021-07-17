@@ -11,6 +11,8 @@ struct lbs {            /* For labels: if and while                */
   int for_goto;
   int for_jmp_false;
 };
+int err_no=0,fl=0,i=0,j=0,type[100];
+char symbol[100][100],temp[100];
 
 struct lbs * newlblrec() { /* Allocate space for the labels           */ 
     return  (struct lbs *) malloc(sizeof(struct lbs));
@@ -53,6 +55,7 @@ context_check( enum code_ops operation, char *sym_name ) {
 %left ’-’ ’+’
 %left ’*’ ’/’
 %right ’^’
+%token ID NL SE C INT FLOAT CHAR DOUBLE
 %%
 /* Grammar Rules and Actions */
 program : LET
@@ -80,3 +83,37 @@ commands : /* empty */
 
 %%
 /* C subroutines */
+void yyerror(const char *str) {printf("error");}
+int yywrap(){return 1;}
+main()
+{
+yyparse();
+if(err_no==0)
+{
+for(j=0;j<i;j++)
+{
+if(type[j]==0) printf("INT-");
+if(type[j]==1) printf("FLOAT-");
+if(type[j]==2) printf("CHAR-");
+if(type[j]==3) printf("DOUBLE-");
+printf("%sn",symbol[j]);
+}
+}
+}
+void insert(int type1)
+{
+fl=0;
+ for(j=0;j<i;j++)
+if(strcmp(temp,symbol[j])==0)
+{
+if(type[i]==type1) printf("Redeclaration of variable");
+else {printf("Multiple Declaration of Variable");err_no=1;}
+fl=1;
+}
+if(fl==0)
+{
+type[i]=type1;
+strcpy(symbol[i],temp);
+i++;
+}
+}
