@@ -1,6 +1,8 @@
  %{
 #include "y.tab.h"  /* for token definitions and yylval */
+#include <math.h>
 #include <string.h>     /* for strdup                       */
+#include "y.tab.h"
 extern char * yylval;
 int x=0;
 %}
