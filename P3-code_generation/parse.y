@@ -71,6 +71,7 @@ static Variable *var;
 %union semrec {          /* The Semantic Records */
  int     intval;        /* Integer values */
  char    *id;           /* Identifiers */
+ double noval;
  struct  lbs *lbls      /* For backpatching */
 }
 
