@@ -4,6 +4,112 @@
   > 3. `gcc -o parser y.tab.c lex.yy.c -lfl`
   > 4. ` cat fibonacci.min | parser `
 
+## Syntax - CFG
+This grammar is ambiguous. You will need to transform the grammar to make it suitable for the parsing technique that you use. You should consult reference materials for an explanation of how to transform a grammar for either ll(1) or lr(1) parser generators 
+### Microsyntax
++----------------------------+    
+|       Reserved Words       |
++=============+==============+
+|   Terminal  |   Spelling   |
++-------------+--------------+
+|         AND | AND          |
++-------------+--------------+
+|       ARRAY | ARRAY        |
++-------------+--------------+
+|   BEGINBODY | BEGIN_BODY   |
++-------------+--------------+
+| BEGINLOCALS | BEGIN_LOCALS |
++-------------+--------------+
+|   BEGINLOOP | BEGIN_LOOP   |
++-------------+--------------+
+| BEGINPARAMS | BEGIN_PARAMS |
++-------------+--------------+
+|    CONTINUE | CONTINUE     |
++-------------+--------------+
+|          DO | DO           |
++-------------+--------------+
+|        ELSE | ELSE         |
++-------------+--------------+
+|     ENDBODY | END_BODY     |
++-------------+--------------+
+|       ENDIF | ENDIF        |
++-------------+--------------+
+|   ENDLOCALS | END_LOCALS   |
++-------------+--------------+
+|     ENDLOOP | END_LOOP     |
++-------------+--------------+
+|   ENDPARAMS | END_PARAMS   |
++-------------+--------------+
+|         FOR | FOR          |
++-------------+--------------+
+|          IF | IF           |
++-------------+--------------+
+|         NOT | NOT          |
++-------------+--------------+
+|          OR | OR           |
++-------------+--------------+
+|        READ | READ         |
++-------------+--------------+
+|       WHILE | WHILE        |
++-------------+--------------+
+|       WRITE | WRITE        |
++-------------+--------------+
+
++---------------------+
+|      Operators      |
++==========+==========+
+| Terminal | Spelling |
++----------+----------+
+|     +    |     +    |
++----------+----------+
+|     -    |     -    |
++----------+----------+
+|     *    |     *    |
++----------+----------+
+|     /    |     /    |
++----------+----------+
+|     %    |     %    |
++----------+----------+
+|    LT    |     <    |
++----------+----------+
+|    LE    |    <=    |
++----------+----------+
+|    EQ    |    ==    |
++----------+----------+
+|    NE    |    <>    |
++----------+----------+
+|    GT    |     >    |
++----------+----------+
+|    GE    |    >=    |
++----------+----------+
+
++------------------------+
+|       Punctuation      |
++=============+==========+
+|   Terminal  | Spelling |
++-------------+----------+
+|  DELIMITER  |     ,    |
++-------------+----------+
+|    ARRAY    |     :    |
+|  CHARACTER  |          |
++-------------+----------+
+|   ENDLINE   |     ;    |
++-------------+----------+
+|    ASSIGN   |    :=    |
++-------------+----------+
+|     LEFT    |     (    |
+| PARENTHESIS |          |
++-------------+----------+
+|    RIGHT    |     )    |
+| PARENTHESIS |          |
++-------------+----------+
+|     LEFT    |     [    |
+|    COLON    |          |
++-------------+----------+
+|    RIGHT    |     ]    |
+|    COLON    |          |
++-------------+----------+
+
 # Project
 ### phase II
 ## Overview

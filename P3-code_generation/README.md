@@ -1,4 +1,4 @@
-> ## Phase 3 QUICK COMMANDS
+\ ## Phase 3 QUICK COMMANDS
 > 1. `mil_run mil_code.mil`
 > 2. `mil_run mil_code.mil < input.txt`
 > 3. `mil_run`
@@ -6,7 +6,48 @@
 > 5. `echo 5 > input.txt mil_run fibonacci.mil < input.txt`
 
 # Project
-### phase III 
+### Phase III 
+## Overview
+We need to check that variables declared before they are used. In the case of a grammatically (syntactically) correct program, it might not make sense because of the declarations. How do we programmatically check that the variables (variable references) have been correctly declared? We can implement the following program:
+  1. Go over all variable declarations.                                                                  
+  2. For every variable declaration you encounter, collect all necessary information about the declared variable.
+  3. Store the collected information in some stash for future reference by using the variable's name as a key.
+  4. When you see a variable reference such as the assignment statement `x := x + y` search the stash bhy the variable's  name to see if the stash haas any information about the variable. If it does, the variable has been declared yet, which is a semantic error.
+
+Our compiler needs to answer the following questions:
+  + What information about the variables do we need to collect?
+  + Where and how do we store the collected information from the previous step?
+  + How do we implement the step to go over all variable declarations (step 1 in the algorithm) ?
+
+  ### What information about the variables do we need to collect?
+    + **Name:** we need to know the name of a declared variable because later we have to look them up by name.
+    + **Category:** we need to know what kind of an identifier it is:
+      + variable
+      + type
+      + procedure
+      + etc.
+    + **Type:** we need this information to perform type checking
+    ---
+    Symbols!
+    A symbol is an identifier of some entity for the program. Ie, variable, subroutine, built-in variable, etc.
+
+  ### Where and how do we store the collected information from the previous step?
+    Symbol Table:
+    + Abstract data type for tracking various symbols in source code. 
+    + Manually populate symbol table for the sample program.
+    + Variable references + declarations
+  ### How do we implement the step to go over all variable declarations (step 1 in the algorithm) ?
+    + build an AST by the parser
+    + create an AST visitor class responsible for walking over the tree and doing different actions when visiting VarDecl AST nodes
+    + said AST visiter for every VarDecl will store the collected information about the variable declaration in the symbol table using the symbol table's insert method.
+    + Add method to symbol table that will be able to look up a symbol by name
+    + We need to update our semantic analyzer to look up a name in the symbol table every time it encounters a variable reference.
+    + Add the look up method that will be responsible for searching for a symbol by name. In other words, the lookup method will be responsible for resolving a variable name (a variable reference) to its declaration. THIS IS NAME RESOLUTION.
+
+
+
+
+```
 ## Overview 
  - In the previous phases of the class project, you used the flex and bison tools to create a lexical analyzer and a parser for the "MINI-L" programming language. In this phase of the class project, you will take a syntactically-correct MINI-L program (a program that can be parsed without any syntax errors), verify that it has no semantic errors, and then generate its corresponding intermediate code. The generated code can then be executed (using a tool we will provide) to run the compiled MINI-L program.
 - You should perform one-pass code generation and directly output the generated code. There is no need to build/traverse a syntax tree. However, you will need to maintain a symbol table during code generation.
@@ -54,4 +95,5 @@ When the compiled `fibonacci` program is executed with the above input "`5`", th
 ```
 
 ### A Note About Runtime Errors
-There are some errors that cannot always be captured at compile-time and may only happen at run-time. These errors include those such as array index out-of-bounds errors, and division by zero. Your implementation need not handle these errors. You may assume that when we grade your programs, we will not use any MINI-L programs that would lead to run-time errors. Note also that the `mil_run` MIL interpreter we are providing may have unexpected behavior if you try to run it on a program that can lead to run-time problems (such as an out-of-bounds array access). Thus, when you are testing your implementation, try to make sure your MINI-L programs will not cause any run-time errors. 
+There are some errors that cannot always be captured at compile-time and may only happen at run-time. These errors include those such as array index out-of-bounds errors, and division by zero. Your implementation need not handle these errors. You may assume that when we grade your programs, we will not use any MINI-L programs that would lead to run-time errors. Note also that the `mil_run` MIL interpreter we are providing may have unexpected behavior if you try to run it on a program that can lead to run-time problems (such as an out-of-bounds array access). Thus, when you are testing your implementation, try to make sure your MINI-L programs will not cause any run-time errors.
+```
