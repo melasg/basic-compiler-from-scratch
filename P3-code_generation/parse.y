@@ -1,248 +1,59 @@
 %{
-/*--------------------------------------------------------------------
- * 
- * Includes
- * 
- *------------------------------------------------------------------*/
-#include <stdio.h>      /* For I/O                                 */
-#include <stdlib.h>     /* For malloc here and in symbol table     */
-#include <string.h>     /* For strcmp in symbol table              */
-#include "st.h"         /* Symbol Table                            */
-#include "sm.h"         /* Stack Machine                           */
-#include "codegen.h"         /* Code Generator                          */
+// #include <stdio.h>      /* For I/O                                 */
+// #include <stdlib.h>     /* For malloc here and in symbol table     */
+// #include <string.h>     /* For strcmp in symbol table              */
+// #include "st.h"         /* Symbol Table                            */
+// #include "sm.h"         /* Stack Machine                           */
+// #include "codegen.h"         /* Code Generator                          */
+#include "shared_headers.h"
 
-struct lbs {            /* For labels: if and while                */
-  int for_goto;
-  int for_jmp_false;
-};
-int err_no=0,fl=0,i=0,j=0,type[100];
-char symbol[100][100],temp[100];
-
-struct lbs * newlblrec() { /* Allocate space for the labels           */ 
-    return  (struct lbs *) malloc(sizeof(struct lbs));
-}
-
-install ( char *sym_name ) {
-    symrec *s;
-    s = getsym (sym_name);
-    if (s == 0)
-        s = putsym (sym_name);
-    else { 
-        errors++;
-        printf( "%s is already defined\n", sym_name );
-    }
-}
-context_check( enum code_ops operation, char *sym_name ) { 
-    symrec *identifier;
-    identifier = getsym( sym_name );
-    if ( identifier == 0 ) { 
-        errors++;
-        printf( "%s", sym_name );
-        printf( "%s\n", " is an undeclared identifier"  );
-        } 
-        else gen_code( operation, identifier->offset );
-}
-/*--------------------------------------------------------------------
- * 
- * definitions
- * 
- *------------------------------------------------------------------*/
-#define  YYDEBUG 1      /* For Debugging                           */
-#define YERROR_VERBOSE 1
-// int yydebug=0;
-void free(void *ptr);
-void yyerror(char *msg);
+int yyerror(char* msg);
 int yylex(void);
-/*--------------------------------------------------------------------
- * 
- * global variables
- * 
- *------------------------------------------------------------------*/
-int errors;     /* count of error incremented in codegen.h */
-static Variable *var;
+
+string errors;
+extern int num_column;
+extern int num_lines;
+extern char* yytext; 
+
+// name, index, container
+int valprm = 0;
+int tmpvar = 0;
+int lblnos = 0;
+string tmps;
+bool addcheck = false; 
+stringstream sm;
+
+vector<string> fwords = { "FUNCTION", "BEGIN_PARAMS", "END_PARAMS", "BEGIN_LOCALS", "END_LOCALS", "BEGIN_BODY","END_BODY","INTEGER","ARRAY","OF","IF","THEN", "ENDIF,"ELSE","WHILE", "DO","FOR","BEGINLOOP","ENDLOOP","CONTINUE", "READ", "WRITE", "AND", "OR", "TRUE", "FALSE", "RETURN", "SEMICOLON", "COLON", "COMMA", "L_PAREN", "R_PAREN", "L_SQUARE_BRACKET", "R_SQUARE_BRACKET", "IDENT", "NUMBER", "EQ", "NEQ", "LT", "GT, "LTE", "GTE", "SUB", "ADD", "MULT", "DIV", "MOD", "NOT", "ASSIGN", "UMINUS" };
+set<string> functions;
+set<string> variables;
 %}
-
-%defines
-
-%union {
-    double value;
-    char *string;
+%union{
+  int noval;
+  char* opval;
+  struct semval_exp{
+    char *r_index, *arr_size, *arr_name, *arr_chk;
+    bool arr_code;
+  } exp;
+  struct semval_cmp{
+    char *op_ptr;
+  } cmp;
+  struct semval_stmt{
+    char *r_index, *arr_size, *arr_name, *arr_chk;
+    bool arr_code;
+  } stm;
 }
-%union semrec {          /* The Semantic Records */
- int     intval;        /* Integer values */
- char    *id;           /* Identifiers */
- double noval;
- struct  lbs *lbls      /* For backpatching */
-}
 
-// %token <intval>  NUMBER
-// %token <id>      IDENTIFIER
-%token <lbls>    IF WHILE
-// %token SKIP THEN ELSE FI DO END
-// %token INTEGER READ WRITE LET IN
-// %token ASSGNOP
-// %left ’-’ ’+’
-// %left ’*’ ’/’
-
-// %token ID NL SE C INT FLOAT CHAR DOUBLE
-/*--------------------------------------------------------------------
- *
- * terminal-symbols
- *
- *------------------------------------------------------------------*/
-%token <string>   IDENTIFIER
-%token <value>    VALUE
-%type <value>     expression
-
-%token LBRACE
-%token RBRACE
-%token SEMICOLON
-%token ASSIGN
-
-/*
- * operator-precedence
- * top-0: -
- *     1: * /
- *     2: + -
- */
-%left ADD SUB
-%left MULT DIV
-%left NEG
-
-/*------------------------------------------------------------------------------
- *
- * start of grammar
- *
- *----------------------------------------------------------------------------*/
-%start program
+%start Program
+%token SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET EQ NEQ LT GT LTE GTE SUB ADD MULT DIV MOD NOT ASSIGN UMINUS
+%token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE READ WRITE AND OR TRUE FALSE RETURN
+%token<noval> NUMBER
+%token<opval> IDENT
+%type<exp>
+%type<cmp>
+%type<stm> Program FUNCTION
 %%
-/* Grammar Rules and Actions */
-program
-    : statement SEMICOLON program
-    | statement SEMICOLON
-    | statement error SEMICOLON program
-      {
-      yyerrok;
-      }
-    ;
-statement
-    : IDENTIFIER 
-      { 
-        var = VarGet($1, &@1);
-      }
-      ASSIGN expression
-      {
-        VarSetValue(var, $4);
-      }
-    | expression
-    ;
-expression
-    : LBRACE expression RBRACE
-      {
-        $$ = $2;
-      }
-    | SUB expression %prec NEG
-      {
-        $$ = - $2;
-      }
-    | expression ADD expression
-      {
-        $$ = ReduceAdd($1, $3, &@3);
-        if (  debug  )
-          printf("reduce %lf + %lf => %lf\n", $1, $3, $$);
-      }
-    | expression SUB expression
-      {
-        $$ = ReduceSub($1, $3, &@3);
-        if (  debug  )
-          printf("reduce %lf - %lf => %lf\n", $1, $3, $$);
-      }
-    | expression MULT expression
-      {
-        $$ = ReduceMult($1, $3, &@3);
-        if (  debug  )
-          printf("reduce %lf * %lf => %lf\n", $1, $3, $$);
-      }
-    | expression DIV expression
-      {
-        $$ = ReduceDiv($1, $3, &@3);
-        if (  debug  )
-          printf("reduce %lf / %lf => %lf\n", $1, $3, $$);
-      }
-    | VALUE
-      {
-        $$ = $1;
-      }
-    | IDENTIFIER
-      {
-        $$ = VarGetValue($1, &@1);
-        if (  debug  )
-          printf("identifier %s => %lf\n", $1, $$);
-      }
-    ;
-
-// program : LET
-//             declarations
-//                 IN           { gen_code( DATA, sym_table->offset );            }
-//                    commands
-//                 END          { gen_code( HALT, 0 ); YYACCEPT;                  }
-//       ;
-//       declarations : /* empty */
-//          | INTEGER id_seq IDENTIFIER ’.’ { install( $3 );                      }
-//       ;
-//       id_seq : /* empty */
-//          | id_seq IDENTIFIER ’,’  { install( $2 );                             }
-// ;
-
-// commands : /* empty */
-//          | commands command ’;’
-//       ;
-//       command : SKIP
-//          | READ IDENTIFIER   { context_check( READ_INT, $2 );                  }
-//          | WRITE exp         { gen_code( WRITE_INT, 0 );                       }
-//          | IDENTIFIER ASSGNOP exp { context_check( STORE, $1 );                }
-// ;
-
 
 %%
-/* C subroutines */
-extern
-void yyerror(char *msg) {
-    // in case sophisticated print error feu. does not work, uncomment this simpler one:
-    // printf("Error '%s'\n", msg);
-    PrintError(msg)
-}
-
-int yywrap(){return 1;}
-main()
-{
-yyparse();
-if(err_no==0)
-{
-for(j=0;j<i;j++)
-{
-if(type[j]==0) printf("INT-");
-if(type[j]==1) printf("FLOAT-");
-if(type[j]==2) printf("CHAR-");
-if(type[j]==3) printf("DOUBLE-");
-printf("%sn",symbol[j]);
-}
-}
-}
-void insert(int type1)
-{
-fl=0;
- for(j=0;j<i;j++)
-if(strcmp(temp,symbol[j])==0)
-{
-if(type[i]==type1) printf("Redeclaration of variable");
-else {printf("Multiple Declaration of Variable");err_no=1;}
-fl=1;
-}
-if(fl==0)
-{
-type[i]=type1;
-strcpy(symbol[i],temp);
-i++;
-}
-}
+ void yyerror(char* msg){
+   printf("error: %s found \'%s\' was found at line #d, column #d\n", msg, yytext, num_lines, num_column);
+ }
