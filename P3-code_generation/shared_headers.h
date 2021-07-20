@@ -24,5 +24,11 @@
 using namespace std;
 
 void yyerror(char *msg);
+// int yylex(void);
+
+// all stack/semantic functions declare here to organize new code gen + checking
+bool sym_table(string);
+bool arr_table(string);
+bool feu_table(string);
 
 #endif // SHARED_HEADERS_H_
