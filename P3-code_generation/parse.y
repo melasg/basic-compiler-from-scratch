@@ -18,7 +18,7 @@
 
 using namespace std;
 
-void yyerror(char *msg);
+int yyerror(char *msg);
 int yylex();
 int yyparse(); //bison generated parser feu. prototype declared
 //global vars
@@ -34,7 +34,7 @@ int lblnos = 0;
 //locals
 string tmps;
 bool addcheck = false; 
-stringstream ssm;
+//stringstream inttable;
 // two approaches, stripping underscores from label putting each character in to_string temp count then setting up a set of two strings for feu/vars, but i'd have to create new var.s
 // last attempt here, will go with first/easier approach of simple stack/vector<string> of everything by hand LOL
 // vector<string> fwords = { "FUNCTION", "BEGIN_PARAMS", "END_PARAMS", "BEGIN_LOCALS", "END_LOCALS", "BEGIN_BODY","END_BODY","INTEGER","ARRAY","OF","IF","THEN", "ENDIF,"ELSE","WHILE", "DO","FOR","BEGINLOOP","ENDLOOP","CONTINUE", "READ", "WRITE", "AND", "OR", "TRUE", "FALSE", "RETURN", "SEMICOLON", "COLON", "COMMA", "L_PAREN", "R_PAREN", "L_SQUARE_BRACKET", "R_SQUARE_BRACKET", "IDENT", "NUMBER", "EQ", "NEQ", "LT", "GT, "LTE", "GTE", "SUB", "ADD", "MULT", "DIV", "MOD", "NOT", "ASSIGN", "UMINUS" };
@@ -47,19 +47,21 @@ vector<vector> <string> > if_store, loops_store;
 %union{
   int intval;
   string* idv;
+  char* val2;
 }
 
 %start Program
-%token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN RETURN
+%token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY ARRAY INTEGER OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN RETURN
 // %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOR BEGINLOOP ENDLOOP CONTINUE READ WRITE AND OR TRUE FALSE RETURN SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN UMINUS
 // %token SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET EQ NEQ LT GT LTE GTE SUB ADD MULT DIV MOD NOT ASSIGN UMINUS
-%token <intval> NUMBER
-%token <idv> IDENTS
+%token NUMBER IDENTS
 %left MULT DIV MOD ADD SUB
 %left LT LTE GT GTE EQ NEQ
 %right NOT
 %left AND OR
 %right ASSIGN
+%type<intval> NUMBER
+%type <idv> IDENTS
 // %type<stm> Program FUNCTION
 
   /* ------------------------------ GRAMMAR START ----------------------------- */
@@ -73,7 +75,7 @@ feulabel: FUNCTION IDENTS { feutbl.push_back(*($2));
   cout << "feu " <<*($2) << endl; }
 ;
 function: feulabel SEMICOLON beginparamsa declarations endparam BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY
-{
+    {
     for(unsigned int j = 0; j < symtbl.size(); j++ ) {
         if (symtyp.at(j) == "INTEGER") {
             std::cout << "show symtbl at " symtbl.at(j) << std::endl; 
@@ -96,7 +98,7 @@ function: feulabel SEMICOLON beginparamsa declarations endparam BEGIN_LOCALS dec
         prmtbl.clear();
         irtmp.clear();
         valprm = 0;
-}
+    }
 ;
 beginparamsa: BEGIN_PARAMS { addcheck = true; }
 ;
@@ -113,7 +115,7 @@ id: IDENTS {
     if(addcheck) {
         prmtbl.push_back("_" +* ($1));
     }
-}
+    }
     | IDENTS COMMA id {
         symtbl.push_back("_" +* ($1));
         symtyp.push_back("INTEGER");
@@ -121,11 +123,11 @@ id: IDENTS {
 ;
 assign: INTEGER {
     symtyp.push_back("INTEGER");
-}
+    }
         | ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
-            stringstream ssm1;
-            ssm1 << $3;
-            string s1 = ssm1.str();
+            stringstream inttable;
+            inttable << $3;
+            string s = inttable.str();
             symtyp.push_back(s);
         }
 ;
@@ -150,24 +152,24 @@ statement: IDENTS ASSIGN expression {
         arop.pop_back();
         irtmp.push_back("[]= _" +* ($1) + ", " + arr-expr + ", " + arr-res-expr);
     }
-| ifexpr statements ENDIF {
+    | ifexpr statements ENDIF {
     irtm.push_back(": " + ifstr.back().at(1));
     ifstr.pop_back();
-} | elseif statements ENDIF {
+    } | elseif statements ENDIF {
         irtmp.push_back(": " + ifstr.back().at(2));
         ifstr.pop_back();
     } 
-| whileexpr statements ENDLOOP {
+    | whileexpr statements ENDLOOP {
     irtmp.push_back(":= " + loopstr.back().at(0));
     irtmp.push_back(": " + loopstr.back().at(2));
     loopstr.pop_back();
     }
-| doexpr WHILE boolexpr {
+    | doexpr WHILE boolexpr {
     irtmp.push_back("?:= " + loopstr.back().at(0) + ", " + arop.back());
     arop.pop_back();
     loopstr.pop_back();
-}
-| READ IDENTS readmult {
+    }
+    | READ IDENTS readmult {
     string var = "_" +* ($2);
     if (!sym_table(var)) {
         exit(0);
@@ -182,11 +184,11 @@ statement: IDENTS ASSIGN expression {
         if (!arr_table(var)) {
             exit(0);
         }
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         irtmp.push_back(".< " + new_tmpvar);
@@ -197,15 +199,15 @@ statement: IDENTS ASSIGN expression {
             rseqq.pop();
         }
     }
-| WRITE postf commast {
+    | WRITE postf commast {
     while(!arop.empty()) {
-        string s3 = arop.front();
+        string s = arop.front();
         arop.erase(arop.begin());
-        irtmp.push_back(".> " + s3)
+        irtmp.push_back(".> " + s)
     }
     arop.clear();
     }
-| CONTINUE {
+    | CONTINUE {
     if (!loopstr.empty()) {
         if(loopstr.back().at(0).at(0) == 'd') {
             irtmp.push_back(":= " + loopstr.back().at(1));
@@ -214,7 +216,7 @@ statement: IDENTS ASSIGN expression {
         }
     }
     }
-| RETURN expression {
+    | RETURN expression {
     irtmp.push_back("ret " + arop.back());
     arop.pop_back();
     }
@@ -223,10 +225,10 @@ statement: IDENTS ASSIGN expression {
 ifexpr: IF boolexpr THEN {
     lblnos++; // incrememnt lables per statement
     vector<string> tmpv;
-    ssm.str("");
-    ssm.clear();
-    ssm << lblnos;
-    string tmp1 = "if_condition_true_" + ssm.str(), tmp2 = "if_condition_false_" + ssm.str(), tmp3 = "end_if_" + ssm.str();
+    inttable.str("");
+    inttable.clear();
+    inttable << lblnos;
+    string tmp1 = "if_condition_true_" + inttable.str(), tmp2 = "if_condition_false_" + inttable.str(), tmp3 = "end_if_" + inttable.str();
     tmpv.push_back(tmp1);
     tmpv.push_back(tmp2);
     tmpv.push_back(tmp3);
@@ -235,50 +237,50 @@ ifexpr: IF boolexpr THEN {
     arop.pop_back();
     irtmp.push_back(":=" + ifstr.back().at(1));
     irtmp.push_back(": " + ifstr.back().at(0));
-}
+    }
 ;
 elseif: ifexpr statements ELSE {
     irtmp.push_back(":= " + ifstr.back().at(2));
     irtmp.push_back(": " + ifstr.back().at(1));
-}
+    }
 ;
 whileru: WHILE {
     lblnos++; // incrememnt lables per statement
     vector<string> tmpv;
-    ssm.str("");
-    ssm.clear();
-    ssm << lblnos;
-    string tmp1 = "while_loop_" + ssm.str(), tmp2 = "conditional_true_" + ssm.str(), tmp3 = "conditional_false_" + ssm.str();
+    inttable.str("");
+    inttable.clear();
+    inttable << lblnos;
+    string tmp1 = "while_loop_" + inttable.str(), tmp2 = "conditional_true_" + inttable.str(), tmp3 = "conditional_false_" + inttable.str();
     tmpv.push_back(tmp1);
     tmpv.push_back(tmp2);
     tmpv.push_back(tmp3);
     loopstr.push_back(tmpv);
     irtmp.push_back(": " + loopstr.back().at(0));
-}
+    }
 ;
 whileexpr: whileru boolexpr BEGINLOOP {
     irtmp.push_back("?:= " + loopstr.back().at(1) + ", " + arop.back());
     arop.pop_back();
     irtmp.push_back(":= " + loopstr.back().at(2));
     irtmp.push_back(": " + loopstr.back().at(1));
-}
+    }
 ;
 doru: DO BEGINLOOP {
     lblnos++; // incrememnt lables per statement
     vector<string> tmpv;
-    ssm.str("");
-    ssm.clear();
-    ssm << lblnos;
-    string tmp1 = "do_while_loop_" + ssm.str(), tmp2 = "do_while_conditional_check" + ssm.str();
+    inttable.str("");
+    inttable.clear();
+    inttable << lblnos;
+    string tmp1 = "do_while_loop_" + inttable.str(), tmp2 = "do_while_conditional_check" + inttable.str();
     tmpv.push_back(tmp1);
     tmpv.push_back(tmp2);
     loopstr.push_back(tmpv);
     irtmp.push_back(": " + tmp1);
-}
+    }
 ;
 doexpr: doru statements ENDLOOP {
     irtmp.push_back(": " + loopstr.back().at(1));
-}
+    }
 ;
 readmult: COMMA IDENTS readmult {
     string var = "_" +* ($2);
@@ -292,10 +294,10 @@ readmult: COMMA IDENTS readmult {
         if (!arr_table(var)) {
             exit(0);
         }
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
-        string new_tmpvar = 't' + ssm.str();
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
+        string new_tmpvar = 't' + inttable.str();
         tmpvar++;
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
@@ -308,11 +310,11 @@ readmult: COMMA IDENTS readmult {
 boolexpr: relationexprz
     | boolexpr OR relationexprz { 
         vector<string> tmpv;
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -325,11 +327,11 @@ boolexpr: relationexprz
 ;
 relationexprz: relationexpr
         | relationexprz AND relationexpr {
-            ssm.str("");
-            ssm.clear();
-            ssm << tmpvar;
+            inttable.str("");
+            inttable.clear();
+            inttable << tmpvar;
             tmpvar++;
-            string new_tmpvar = 't' + ssm.str();
+            string new_tmpvar = 't' + inttable.str();
             symtbl.push_back(new_tmpvar);
             symtyp.push_back("INTEGER");
             string op_a = arop.back();
@@ -342,11 +344,11 @@ relationexprz: relationexpr
 ;
 relationexpr: rexpr
     | NOT rexpr {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -356,11 +358,11 @@ relationexpr: rexpr
     }
 ;
 rexpr: expression EQ expression {
-    ssm.str("");
-    ssm.clear();
-    ssm << tmpvar;
+    inttable.str("");
+    inttable.clear();
+    inttable << tmpvar;
     tmpvar++;
-    string new_tmpvar = 't' + ssm.str();
+    string new_tmpvar = 't' + inttable.str();
     symtbl.push_back(new_tmpvar);
     symtyp.push_back("INTEGER");
     string op_a = arop.back();
@@ -371,11 +373,11 @@ rexpr: expression EQ expression {
     arop.push_back(new_tmpvar);
     }
     | expression NEQ expression {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -386,11 +388,11 @@ rexpr: expression EQ expression {
         arop.push_back(new_tmpvar);
     }
     | expression LT expression {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -401,11 +403,11 @@ rexpr: expression EQ expression {
         arop.push_back(new_tmpvar);
     }
     | expression GT expression {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -416,11 +418,11 @@ rexpr: expression EQ expression {
         arop.push_back(new_tmpvar);
     }
     | expression LTE expression {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -431,11 +433,11 @@ rexpr: expression EQ expression {
         arop.push_back(new_tmpvar);
     }
     | expression GTE expression {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -446,22 +448,22 @@ rexpr: expression EQ expression {
         arop.push_back(new_tmpvar);
     }
     | TRUE {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         irtmp.push_back("= " + new_tmpvar + ", 1");
         arop.push_back(new_tmpvar);
     }
     | FALSE {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         irtmp.push_back("= " + new_tmpvar + ", 0");
@@ -473,11 +475,11 @@ expression: mulexpr expradd
 ;
 expradd: 
     | ADD mulexpr expradd {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -488,11 +490,11 @@ expradd:
         arop.push_back(new_tmpvar);
     }
     | SUB mulexpr expradd {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         string op_a = arop.back();
@@ -507,11 +509,11 @@ mulexpr: term multtermz
 ;
 multtermz: 
         | MULT term multtermz {
-            ssm.str("");
-            ssm.clear();
-            ssm << tmpvar;
+            inttable.str("");
+            inttable.clear();
+            inttable << tmpvar;
             tmpvar++;
-            string new_tmpvar = 't' + ssm.str();
+            string new_tmpvar = 't' + inttable.str();
             symtbl.push_back(new_tmpvar);
             symtyp.push_back("INTEGER");
             string op_a = arop.back();
@@ -522,11 +524,11 @@ multtermz:
             arop.push_back(new_tmpvar);
         }
         | DIV term multtermz {
-            ssm.str("");
-            ssm.clear();
-            ssm << tmpvar;
+            inttable.str("");
+            inttable.clear();
+            inttable << tmpvar;
             tmpvar++;
-            string new_tmpvar = 't' + ssm.str();
+            string new_tmpvar = 't' + inttable.str();
             symtbl.push_back(new_tmpvar);
             symtyp.push_back("INTEGER");
             string op_a = arop.back();
@@ -537,11 +539,11 @@ multtermz:
             arop.push_back(new_tmpvar);
         }
         | MOD term multtermz { 
-            ssm.str("");
-            ssm.clear();
-            ssm << tmpvar;
+            inttable.str("");
+            inttable.clear();
+            inttable << tmpvar;
             tmpvar++;
-            string new_tmpvar = 't' + ssm.str();
+            string new_tmpvar = 't' + inttable.str();
             symtbl.push_back(new_tmpvar);
             symtyp.push_back("INTEGER");
             string op_a = arop.back();
@@ -552,13 +554,35 @@ multtermz:
             arop.push_back(new_tmpvar);
         }
 ;
-term: postf { }
+
+termident: L_PAREN termexpr R_PAREN {
+    while (!fparamsq.empty()) { 
+        irtmp.push_back("param " + fparamsq.top());
+        fparamsq.pop();
+    }
+    }
+| L_PAREN R_PAREN {
+
+    }
+;
+termexpr: expression { 
+    fparamsq.push(arop.back());
+    arop.pop_back();
+    }
+    | expression COMMA termexpr {
+        fparamsq.push(arop.back());
+        arop.pop_back();
+    }
+;
+term: postf {
+    
+    }
     | SUB postf {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         irtmp.push_back("- " + new_tmpvar + ", 0 " + arop.back() );
@@ -566,11 +590,11 @@ term: postf { }
         arop.push_back(new_tmpvar)
     }
     | IDENTS termident {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
         if (!feu_table(*($1))) {
@@ -581,11 +605,11 @@ term: postf { }
     }
 ;
 postf: var { 
-    ssm.str("");
-    ssm.clear();
-    ssm << tmpvar;
+    inttable.str("");
+    inttable.clear();
+    inttable << tmpvar;
     tmpvar++;
-    string new_tmpvar = 't' + ssm.str();
+    string new_tmpvar = 't' + inttable.str();
     symtbl.push_back(new_tmpvar);
     symtyp.push_back("INTEGER");
     string op_a = arop.back();
@@ -598,36 +622,19 @@ postf: var {
     arop.push_back(new_tmpvar);
     }
     | NUMBERS {
-        ssm.str("");
-        ssm.clear();
-        ssm << tmpvar;
+        inttable.str("");
+        inttable.clear();
+        inttable << tmpvar;
         tmpvar++;
-        string new_tmpvar = 't' + ssm.str();
+        string new_tmpvar = 't' + inttable.str();
         symtbl.push_back(new_tmpvar);
         symtyp.push_back("INTEGER");
-        stringstream ssn;
-        ssn << $1;
-        irtmp.push_back("= " + new_tmpvar + ", " + ssn.str());
+        stringstream inttable;
+        inttable << $1;
+        irtmp.push_back("= " + new_tmpvar + ", " + inttable.str());
         arop.push_back(new_tmpvar);
     }
     | L_PAREN expression R_PAREN
-;
-termident: L_PAREN termexpr R_PAREN {
-    while (!fparamsq.empty()) { 
-        irtmp.push_back("param " + fparamsq.top());
-        fparamsq.pop();
-    }
-    }
-| L_PAREN R_PAREN { }
-;
-termexpr: expression { 
-    fparamsq.push(arop.back());
-    arop.pop_back();
-}
-    | expression COMMA termexpr {
-        fparamsq.push(arop.back());
-        arop.pop_back();
-    }
 ;
 var: IDENTS {
     string var = "_" +* ($1);
@@ -652,10 +659,12 @@ commast:
 %%
 
 void yyerror(string s) {
-
+    extern char *yytext;
+    cerr << "syntax error at line: " << num_lines << ", column: " << num_column << " : symbol encountered: " << yytext << endl;
 }
-void yyerror(char* msg){
-   printf("error: %s found \'%s\' was found at line #d, column #d\n", msg, yytext, num_lines, num_column);
+int yyerror(char* msg){
+   // printf("error: %s found \'%s\' was found at line #d, column #d\n", msg, yytext, num_lines, num_column);
+   return yyerror(string(s));
  }
 
 // void yyerror(char *msg) {
