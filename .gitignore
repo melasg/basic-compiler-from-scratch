@@ -62,3 +62,5 @@ docs/ref/bnf_ho
 .vscode/*
 docs/outside_reference/Screen Shot 2021-07-17 at 9.42.33 AM.png
 docs/outside_reference/Screen Shot 2021-07-18 at 10.20.27 AM.png
+
+*.mil

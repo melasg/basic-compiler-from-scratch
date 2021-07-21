@@ -1,14 +1,22 @@
 /*! @file lex.l */
 %option yylineno
 %{
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <queue>
+#include <stack>
 #include <math.h>
 #include <string.h>     /* for strdup                       */
-#include "y.tab.h"  /* for token definitions and yylval */
+#include "minil.tab.h"  /* for token definitions and yylval */
 
 // extern "C" int yylex();
 extern char * yylval;
 int yylex(void);
-int yyerror(char *msg);
+void yyerror(char *msg);
 int num_lines = 1;
 int num_column = 1;
 %}

@@ -77,7 +77,7 @@ statement: type1
 | type8
 ;
 
-if-expr: IF bool-expr THEN {
+ifexpr1: IF boolexpr1 THEN {
     lblnos++; // incrememnt lables per statement
     vector<string> tmpv;
     ssm.str("");
@@ -94,7 +94,7 @@ if-expr: IF bool-expr THEN {
     irtmp.push_back(": " + ifstr.back().at(0));
 }
 ;
-elseif: if-expr statements ELSE {
+elseif: ifexpr1 statements ELSE {
     irtmp.push_back(":= " + ifstr.back().at(2));
     irtmp.push_back(": " + ifstr.back().at(1));
 }
@@ -113,7 +113,7 @@ while-run: WHILE {
     irtmp.push_back(": " + loopstr.back().at(0));
 }
 ;
-while-expr: while-run bool-expr BEGINLOOP {
+whileexpr1: while-run boolexpr1 BEGINLOOP {
     irtmp.push_back("?:= " + loopstr.back().at(1) + ", " + arop.back());
     arop.pop_back();
     irtmp.push_back(":= " + loopstr.back().at(2));
@@ -133,7 +133,7 @@ do-run: DO BEGINLOOP {
     irtmp.push_back(": " + tmp1);
 }
 ;
-do-expr: do-run statements ENDLOOP {
+doexpr1: do-run statements ENDLOOP {
     irtmp.push_back(": " + loopstr.back().at(1));
 }
 ;
@@ -162,8 +162,8 @@ read-mult: COMMA IDENTS read-mult {
     }
     |
 ;
-bool-expr: relation-exprz
-    | bool-expr OR relation-exprz { 
+boolexpr1: relation-exprz
+    | boolexpr1 OR relation-exprz { 
         vector<string> tmpv;
         ssm.str("");
         ssm.clear();
@@ -324,7 +324,7 @@ rexpr: expression EQ expression {
         irtmp.push_back("= " + new_tmpvar + ", 0");
         arop.push_back(new_tmpvar);
     }
-    | L_PAREN bool-expr R_PAREN
+    | L_PAREN boolexpr1 R_PAREN
 ;
 expression: mult-expr expr-add
 ;
@@ -523,7 +523,7 @@ type1: IDENTS ASSIGN expression {
         irtmp.push_back("[]= _" +* ($1) + ", " + arr-expr + ", " + arr-res-expr);
     }
 ;
-type2: if-expr statements ENDIF {
+type2: ifexpr1 statements ENDIF {
     irtm.push_back(": " + ifstr.back().at(1));
     ifstr.pop_back();
 }
@@ -532,13 +532,13 @@ type2: if-expr statements ENDIF {
         ifstr.pop_back();
     }
 ;
-type3:  while-expr statements ENDLOOP {
+type3:  whileexpr1 statements ENDLOOP {
     irtmp.push_back(":= " + loopstr.back().at(0));
     irtmp.push_back(": " + loopstr.back().at(2));
     loopstr.pop_back();
 }
 ;
-type4:  do-expr WHILE bool-expr {
+type4:  doexpr1 WHILE boolexpr1 {
     irtmp.push_back("?:= " + loopstr.back().at(0) + ", " + arop.back());
     arop.pop_back();
     loopstr.pop_back();
