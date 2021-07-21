@@ -28,17 +28,22 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/P3-code_generation/
           wget -o tests/mil_run.mil https://www.cs.ucr.edu/~mafar001/compiler/webpages3/mil_run
-          mil_run tests/mil_code.mil
+          mil_run tests/mytest.mil
       - name: test 1 output to input.txt
         run: |
           cd $GITHUB_WORKSPACE/P3-code_generation/
-          touch tests/input.txt
-          mil_run mil_code.mil < tests/input.txt
+          touch tests/input.txt && touch tests/fibout.mil
+          make clean
+          make
+          echo 'run executable fibonacci.min -> output fibout.mil'
+          ./minil tests/fibonacci.min > tests/fibout.mil
+          echo 'fibout.mil -> input.txt'
+          ./mil_run tests/fibout.mil < tests/input.txt
+          cat tests/input.txt
       # Runs a set of commands using the runners shell
-      - name: run then test through fibonacci/other tests
+      - name: let's try the last tests
         run: |
           cd $GITHUB_WORKSPACE/P3-code_generation/
-          mil_run
-          cat fibonacci.min | ./boz > test1
-          cat tests/fibonacci.min | my_compiler
+          cat tests/fibonacci.min | ./minil > test1
+          cat tests/fibonacci.min | minil
           echo 5 > tests/input.txt mil_run tests/fibonacci.mil < tests/input.txt
