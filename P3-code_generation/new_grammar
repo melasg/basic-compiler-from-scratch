@@ -13,11 +13,78 @@ functions: // epsilon
 feulabel: FUNCTION IDENTIFIERS { feutbl.push_back(*($2));
 cout << "feu " <<*($2) << endl; }
 ;
-function: feulabel SEMICOLON beginparamsa declarations endparam BEGINLOCALS declarations ENDLOCALS BEGINBODY statements ENDBODY {}
+function: feulabel SEMICOLON beginparamsa declarations endparam BEGINLOCALS declarations ENDLOCALS BEGINBODY statements ENDBODY
+{
+    for(unsigned int j = 0; j < symtbl.size(); j++ ) {
+        if (symtyp.at(j) == "INTEGER") {
+            std::cout << "show symtbl at " symtbl.at(j) << std::endl; 
+        } else {
+            std::cout << "info: " << symtbl.at(j) << "and " << symtyp.at(j) << std::endl;
+        }
+    } //end for loop
+    while (!prmtbl.empty()) {
+            std::cout << "param = " << prmtbl.front() << ", value: " << valprm << std::endl;
+            prmtbl.erase(prmtbl.begin());
+            valprm++;
+    } // end while loop
+    for (unsigned int i = 0 ; i < irtmp.size(); i++) {
+        std::cout << irtmp.at(i) << std::endl;
+        }
+        std::cout "endfunc" << std::endl;
+        // re - initialize before ending loop
+        symtbl.clear();
+        symtyp.clear();
+        prmtbl.clear();
+        irtmp.clear();
+        valprm = 0;
+}
 ;
 beginparamsa: BEGINPARAMS { addcheck = true; }
 ;
 endparamsa: ENDPARAMS { addcheck = false; }
+;
+
+declarations: 
+        | declaration SEMICOLON declarations
+;
+declaration: id COLON ASSIGN
+;
+id: IDENTIFIERS {}
+    | IDENTIFIERS COMMA id {}
+;
+assign: INTEGER {}
+        | ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {}
+;
+statements: statement SEMICOLON statements
+    | statement SEMICOLON
+;
+statement: type1
+| type2
+| type3
+| type4
+| type5
+| type6
+| type7
+| type8
+;
+type1: 
+;
+type2:
+;
+type3:
+;
+type4:
+;
+type5:
+;
+type6:
+;
+type7:
+;
+type8:
+;
+
+if-expr: IF 
 ;
 
 %%

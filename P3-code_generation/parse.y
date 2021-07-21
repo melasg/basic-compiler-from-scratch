@@ -17,7 +17,7 @@ extern char* yytext;
 
 // name, index, container
 int valprm = 0;
-int tmpvar = 0;
+int tmpvar = 0; we 
 int lblnos = 0;
 //locals
 string tmps;
