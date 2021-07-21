@@ -3,6 +3,139 @@
   > 2. `flex mini_l.lex`
   > 3. `gcc -o parser y.tab.c lex.yy.c -lfl`
   > 4. ` cat fibonacci.min | parser `
+
+## Syntax - CFG
+This grammar is ambiguous. You will need to transform the grammar to make it suitable for the parsing technique that you use. You should consult reference materials for an explanation of how to transform a grammar for either ll(1) or lr(1) parser generators 
+### Microsyntax
++----------------------------+    
+|       Reserved Words       |
++=============+==============+
+|   Terminal  |   Spelling   |
++-------------+--------------+
+|         AND | AND          |
++-------------+--------------+
+|       ARRAY | ARRAY        |
++-------------+--------------+
+|   BEGINBODY | BEGIN_BODY   |
++-------------+--------------+
+| BEGINLOCALS | BEGIN_LOCALS |
++-------------+--------------+
+|   BEGINLOOP | BEGIN_LOOP   |
++-------------+--------------+
+| BEGINPARAMS | BEGIN_PARAMS |
++-------------+--------------+
+|    CONTINUE | CONTINUE     |
++-------------+--------------+
+|          DO | DO           |
++-------------+--------------+
+|        ELSE | ELSE         |
++-------------+--------------+
+|     ENDBODY | END_BODY     |
++-------------+--------------+
+|       ENDIF | ENDIF        |
++-------------+--------------+
+|   ENDLOCALS | END_LOCALS   |
++-------------+--------------+
+|     ENDLOOP | END_LOOP     |
++-------------+--------------+
+|   ENDPARAMS | END_PARAMS   |
++-------------+--------------+
+|         FOR | FOR          |
++-------------+--------------+
+|          IF | IF           |
++-------------+--------------+
+|         NOT | NOT          |
++-------------+--------------+
+|          OR | OR           |
++-------------+--------------+
+|        READ | READ         |
++-------------+--------------+
+|       WHILE | WHILE        |
++-------------+--------------+
+|       WRITE | WRITE        |
++-------------+--------------+
+
++---------------------+
+|      Operators      |
++==========+==========+
+| Terminal | Spelling |
++----------+----------+
+|     +    |     +    |
++----------+----------+
+|     -    |     -    |
++----------+----------+
+|     *    |     *    |
++----------+----------+
+|     /    |     /    |
++----------+----------+
+|     %    |     %    |
++----------+----------+
+|    LT    |     <    |
++----------+----------+
+|    LE    |    <=    |
++----------+----------+
+|    EQ    |    ==    |
++----------+----------+
+|    NE    |    <>    |
++----------+----------+
+|    GT    |     >    |
++----------+----------+
+|    GE    |    >=    |
++----------+----------+
+
++------------------------+
+|       Punctuation      |
++=============+==========+
+|   Terminal  | Spelling |
++-------------+----------+
+|  DELIMITER  |     ,    |
++-------------+----------+
+|    ARRAY    |     :    |
+|  CHARACTER  |          |
++-------------+----------+
+|   ENDLINE   |     ;    |
++-------------+----------+
+|    ASSIGN   |    :=    |
++-------------+----------+
+|     LEFT    |     (    |
+| PARENTHESIS |          |
++-------------+----------+
+|    RIGHT    |     )    |
+| PARENTHESIS |          |
++-------------+----------+
+|     LEFT    |     [    |
+|    COLON    |          |
++-------------+----------+
+|    RIGHT    |     ]    |
+|    COLON    |          |
++-------------+----------+
+
+# Project
+### phase II
+## Overview
+In the previous phase of the class project, you used the `flex` tool to create a lexical analyzer for the "MINI-L" programming language that reads in a MINI-L program (from a text file) and identifies the sequence of lexical tokens in the text file. In this phase of the class project, you will create a parser using the `bison` tool that will check to see whether the identified sequence of tokens adheres to the specified grammar of MINI-L. The output of your parser will be the list of productions used during the parsing process. If any syntax errors are encountered during parsing, your parser should emit appropriate error messages. Additionally, you will be required to submit the grammar for MINI-L that you will need to write before you can use `bison`. 
+### Bison
+ `Bison` is a tool for generating parsers. Given a specified context-free grammar for a language, `bison` will automatically produce an `LALR(1)` bottom-up parser for that language. The parser will ensure that a given sequence of tokens are ordered in such a way that they adhere to the specified grammar of the language. If the tokens fail to parse properly, then appropriate syntax error messages are outputted.
+`Shift/Reduce` and `Reduce/Reduce` conflicts:
+When ambiguities exist in the specified grammar, `bison` will emit one or more conflicts when it is run. These conflicts do not prevent `bison` from generating the parser from your specification, but they may unexpectedly affect how your parser behaves. A shift/reduce conflict occurs when the parser may perform either a shift or a reduce. A reduce/reduce conflict occurs when there are two or more production rules that apply to the same sequence of input tokens. In general, reduce/reduce conflicts indicate errors in the grammar (or at least serious ambiguities) and should be eliminated by modifying the grammar specification as needed. Shift/reduce conflicts, on the other hand, are more difficult to completely eliminate, especially when using the special "`error`" token provided by `bison` to handle errors. Therefore, you should try to eliminate as many shift/reduce conflicts as you can, but some shift/reduce conflicts may remain as long as they do not adversely affect the behavior of your parser. You can run `bison` with the `-v` option to generate an output file containing detailed information about each conflict.
+In our department, `bison` is installed and can be used on lab machines and the "bolt" server. 
+### detailed requirements
+- First, you will need to write the grammar for the MINI-L language, based on the specification for MINI-L that we have provided for you. You must submit this grammar along with the other files required for this phase of the class project!
+- Create the `bison` parser specification file using the MINI-L grammar. Ensure that you specify helpful syntax error messages to be outputted by the parser in the event of any syntax errors.
+   - Example: write the `bison` specification in a file named `mini_l.y`.
+- Run bison to generate the parser for MINI-L using your specification. The `-d` flag is necessary to create a `.h` file that will link your flex lexical analyzer and your `bison` parser. The `-v` flag is helpful for creating an output file that can be used to analyze any conflicts in `bison`. The `--file-prefix` option can be used to change the prefix of the file names outputted by `bison`.
+  - Example: execute the command `bison -v -d --file-prefix=y mini_l.y`. This will create the parser in a file called `y.tab.c`, the necessary `.h` file called `y.tab.h`, and the informative output file called `y.output`.
+- Ensure that your MINI-L lexical analyzer from the first phase of the class project has been constructed.
+  - Example: if your lexical analyzer specification is in a file called `mini_l.lex`, then use it with flex as follows: `flex mini_l.lex`. This will create the lexical analyzer in a file called `lex.yy.c`.
+- Compile everything together into a single executable.
+  - Example: compile your parser into the executable parser with the following command: `gcc -o parser y.tab.c lex.yy.c -lfl`. The program parser should now be available for use. 
+### Example Usage 
+ Suppose your parser is in the executable named parser. Then for the MINI-L program `fibonacci.min`, your parser should be invoked as follows: 
+```shell
+cat fibonacci.min | parser
+```
+The list of productions taken by your parser during parsing should then be printed to the screen. As one example, the output might look like this (you do not need to number each production or label each non-terminal with the corresponding production number). However, your output may be different due to different productions in your specification. The most important thing is that your parser should not output any syntax errors for syntactically correct programs, and your parser should output helpful syntax error messages (for at least the first syntax error) whenever syntax errors do exist in the inputted MINI-L program. 
+
 ## Our bison file's guts:
 | **filename** |                                                                       **Content**                                                                      |
 |:------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------:|
